@@ -12,17 +12,19 @@ const Accountsetting = () => {
       <div className="mt-16 sml:mx-12 md:!mx-2 lg:!mx-2 xl:!mx-12">
         <div className="flex items-center gap-x-6 mb-8">
           <ImKey className="text-3xl text-black" />
-          <p className="font-pop font-normal text-xl text-black">
+          <p className="font-pop font-normal text-xl text-black cursor-pointer">
             Change Password.
           </p>
         </div>
         <div className="flex items-center gap-x-6 mb-8">
           <BsCircleHalf className="text-3xl text-black" />
-          <p className="font-pop font-normal text-xl text-black">Theme.</p>
+          <p className="font-pop font-normal text-xl text-black cursor-pointer">
+            Theme.
+          </p>
         </div>
         <div className="flex items-center gap-x-6 mb-8">
           <RiDeleteBin5Fill className="text-3xl text-black" />
-          <p className="font-pop font-normal text-xl text-black">
+          <p className="font-pop font-normal text-xl text-black cursor-pointer">
             Delete Account.
           </p>
         </div>

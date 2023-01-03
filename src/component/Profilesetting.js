@@ -28,25 +28,27 @@ const Profilesetting = () => {
       <div className="mt-10 sml:mx-12 md:!mx-2 lg:!mx-2 xl:!mx-12">
         <div className="flex items-center gap-x-6 mb-8">
           <RiEdit2Fill className="text-3xl text-black" />
-          <p className="font-pop font-normal text-xl text-black">
+          <p className="font-pop font-normal text-xl text-black cursor-pointer">
             Edit Profile Name.
           </p>
         </div>
         <div className="flex items-center gap-x-6 mb-8">
           <TbEdit className="text-3xl text-black" />
-          <p className="font-pop font-normal text-xl text-black">
+          <p className="font-pop font-normal text-xl text-black cursor-pointer">
             Edit Profile Status Info.
           </p>
         </div>
         <div className="flex items-center gap-x-6 mb-8">
           <RiImageAddFill className="text-3xl text-black" />
-          <p className="font-pop font-normal text-xl text-black">
+          <p className="font-pop font-normal text-xl text-black cursor-pointer">
             Edit Profile Photo.
           </p>
         </div>
         <div className="flex items-center gap-x-6">
           <MdHelpOutline className="text-3xl text-black" />
-          <p className="font-pop font-normal text-xl text-black">Help.</p>
+          <p className="font-pop font-normal text-xl text-black cursor-pointer">
+            Help.
+          </p>
         </div>
       </div>
       <span className="absolute bottom-12 left-[50%] -translate-x-2/4 font-pop font-normal text-xl text-gray">
