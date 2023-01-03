@@ -9,7 +9,7 @@ const Grouprequest = () => {
         <h2 className="font-pop font-semibold text-xl text-black">
           Group Request
         </h2>
-        <button className="my_btn">Create New</button>
+        <button className="my_btn">Create Group</button>
       </div>
       <SimpleBar className="h-[283px] px-4 pt-5">
         <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4">
