@@ -1,0 +1,26 @@
+import React from "react";
+import Friend from "../../component/Friend";
+import Messagefield from "../../component/Messagefield";
+import Mygroup from "../../component/Mygroup";
+import Search from "../../component/Search";
+import Sidebar from "../../component/Sidebar";
+
+const Message = () => {
+  return (
+    <div className="flex flex-col lg:flex-row p-4 gap-x-8">
+      <div className="w-full lg:w-[140px] xl:w-[186px]">
+        <Sidebar active="message" />
+      </div>
+      <div className="w-full lg:w-[426px]">
+        <Search />
+        <Mygroup marginT="40px" hight="280px" />
+        <Friend marginT="44px" />
+      </div>
+      <div className="w-full lg:w-[690px]">
+        <Messagefield />
+      </div>
+    </div>
+  );
+};
+
+export default Message;
