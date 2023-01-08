@@ -17,7 +17,12 @@ module.exports = {
         sm: "320px",
         sml: "667px",
       },
+      clipPath: {
+        leftpolygon: "polygon(100% 0, 0% 100%, 100% 100%)",
+        rightpolygon: "polygon(0 0, 0 100%, 100% 100%)",
+      },
     },
   },
-  plugins: [require("tailwind-scrollbar-hide")],
+
+  plugins: [require("tailwind-scrollbar-hide"), require("tailwind-clip-path")],
 };
