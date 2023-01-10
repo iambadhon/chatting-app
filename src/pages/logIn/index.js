@@ -118,7 +118,7 @@ const LogIn = () => {
               </div>
               <div className="mt-12 sml:mt-10 md:!mt-12">
                 <button
-                  className="my_btn w-full !text-xl !rounded-xl py-5 sml:py-3 md:!py-5 px-8 !font-nunito after:hover:!bg-lightwhite after:!w-full after:!h-0 after:!top-[unset] after:bottom-0 after:hover:!bottom-[unset] after:hover:!top-0 after:hover:!h-full"
+                  className="my_btn w-full !text-xl !rounded-xl !py-5 sml:!py-3 md:sml:!py-5 !font-nunito after:hover:!bg-lightwhite after:!w-full after:!h-0 after:!top-[unset] after:bottom-0 after:hover:!bottom-[unset] after:hover:!top-0 after:hover:!h-full"
                   type="button"
                   onClick={handleLogin}
                 >

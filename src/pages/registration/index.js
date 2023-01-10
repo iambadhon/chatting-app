@@ -1,9 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RiEyeCloseFill, RiEyeFill } from "react-icons/ri";
 import { useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 
 const Registration = () => {
+  //Authentication
+  const auth = getAuth();
+  //Authentication error
+  let [firebaseerr, setFirebaseErr] = useState("");
+  //Authentication success
+  let [regsuccess, setRegSuccess] = useState("");
+  //react loading
+  let [loading, setLoading] = useState(false);
+  //redirection
+  let navigate = useNavigate();
   // validation
   let [email, setEmail] = useState("");
   let [fullname, setFullname] = useState("");
@@ -26,6 +43,7 @@ const Registration = () => {
   let handleEmail = (e) => {
     setEmail(e.target.value);
     setEmailErr("");
+    setFirebaseErr("");
   };
 
   let handleFullname = (e) => {
@@ -107,10 +125,48 @@ const Registration = () => {
         setPasswordErr("Password must contain 1 small letter.");
       } else if (!/^(?=.*?[0-9])/.test(password)) {
         setPasswordErr("Password must contain 1 number.");
-      } else if (!/^(?=.*?[#?!@$%^&*-])/.test(password)) {
+      } else if (!/^(?=.*?[#!@$%^&*-])/.test(password)) {
         setPasswordErr("Password must contain 1 symbol.");
-      } else if (!/^.{6,}/.test(password)) {
+      } else if (!/^(?=.{6,})/.test(password)) {
         setPasswordErr("Password have at lest 6 character.");
+      }
+      if (
+        email &&
+        fullname &&
+        password &&
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) &&
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#!@$%^&*-])(?=.{6,})/.test(
+          password
+        )
+      ) {
+        setLoading(true);
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((user) => {
+            updateProfile(auth.currentUser, {
+              displayName: fullname,
+              photoURL: "images/profile.png",
+            })
+              .then(() => {
+                sendEmailVerification(auth.currentUser).then(() => {
+                  setRegSuccess(
+                    "Registration Successfull. Please varify your email address"
+                  );
+                });
+                setTimeout(() => {
+                  navigate("/login");
+                }, 2000);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          })
+          .catch((error) => {
+            setLoading(false);
+            const errorCode = error.code;
+            if (errorCode.includes("auth/email-already-in-use")) {
+              setFirebaseErr("Sorry! This Email has already been registered.");
+            }
+          });
       }
     }
   };
@@ -130,12 +186,17 @@ const Registration = () => {
             <p className="font-nunito text-xl sml:text-lg md:!text-xl font-normal text-gray text-center sml:text-left">
               Free register and you can enjoy it
             </p>
-            <form action="#" className="lg:w-[370px] mt-10 sml:mt-6 md:!mt-10">
+            {regsuccess && (
+              <p className="bg-green-500 text-white mt-2 px-3 py-1.5 text-lg inline-block font-semibold font-nunito rounded-md">
+                {regsuccess}
+              </p>
+            )}
+            <form action="#" className="lg:w-[370px] mt-10 sml:mt-6 md:!mt-9">
               <div className="relative">
                 <input
                   className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 px-8 sml:px-5 md:!px-8 font-nunito text-xl focus:border-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
                     emailerr ? "border-red-500" : "border-gray/25"
-                  }`}
+                  }  ${firebaseerr ? "border-red-500" : "border-gray/25"}`}
                   type="email"
                   placeholder="email"
                   onChange={handleEmail}
@@ -144,8 +205,13 @@ const Registration = () => {
                   Email Addres
                 </p>
                 {emailerr && (
-                  <p className="text-red-500 text-white mt-1 ml-2 text-sm font-semibold font-nunito">
+                  <p className="text-red-500 mt-1 ml-2 text-sm font-semibold font-nunito">
                     {emailerr}
+                  </p>
+                )}
+                {firebaseerr && (
+                  <p className="text-red-500 mt-1 ml-2 text-sm font-semibold font-nunito">
+                    {firebaseerr}
                   </p>
                 )}
               </div>
@@ -162,7 +228,7 @@ const Registration = () => {
                   Full name
                 </p>
                 {fullnameerr && (
-                  <p className="text-red-500 text-white ml-2 mt-1 text-sm font-semibold font-nunito">
+                  <p className="text-red-500 ml-2 mt-1 text-sm font-semibold font-nunito">
                     {fullnameerr}
                   </p>
                 )}
@@ -180,7 +246,7 @@ const Registration = () => {
                   Password
                 </p>
                 {passworderr && (
-                  <p className="text-red-500 text-white ml-2 mt-1 text-sm font-semibold font-nunito">
+                  <p className="text-red-500 ml-2 mt-1 text-sm font-semibold font-nunito">
                     {passworderr}
                   </p>
                 )}
@@ -224,17 +290,30 @@ const Registration = () => {
                   />
                 )}
               </div>
-              <div className="relative mt-12 sml:mt-5 md:!mt-12">
-                <button
-                  className="my_btn w-full !text-xl !rounded-full py-5 sml:py-3 md:!py-5 px-8 sml:px-3 md:!px-8 !font-nunito after:hover:!bg-lightwhite after:!w-full after:!h-0 after:hover:!top-[unset] after:hover:!bottom-0 after:hover:!h-full"
-                  type="button"
-                  onClick={handleSubmit}
-                >
-                  Sign up
-                </button>
+              <div className="relative mt-12 sml:mt-5 md:!mt-10">
+                {loading ? (
+                  <div className="flex justify-center items-center sml:h-14 md:!h-full">
+                    <ThreeDots
+                      height="72"
+                      width="150"
+                      radius="9"
+                      color="#5F35F5"
+                      ariaLabel="three-dots-loading"
+                      visible={true}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    className="my_btn w-full !text-xl !rounded-full !py-5 sml:!py-3 md:sml:!py-5 !font-nunito after:hover:!bg-lightwhite after:!w-full after:!h-0 after:hover:!top-[unset] after:hover:!bottom-0 after:hover:!h-full"
+                    type="button"
+                    onClick={handleSubmit}
+                  >
+                    Sign Up
+                  </button>
+                )}
               </div>
             </form>
-            <div className="lg:w-[370px] flex gap-2 justify-center mt-8 sml:mt-4 md:!mt-8 mb-4">
+            <div className="lg:w-[370px] flex gap-2 justify-center mt-8 sml:mt-4 md:!mt-6 mb-3">
               <p className="font-nunito text-sm font-medium text-durkblue">
                 Already have an account ?
               </p>
