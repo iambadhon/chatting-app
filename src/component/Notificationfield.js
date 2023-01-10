@@ -1,7 +1,6 @@
 import React from "react";
 import { IoMdNotifications } from "react-icons/io";
 import SimpleBar from "simplebar-react";
-import "simplebar-react/dist/simplebar.min.css";
 
 const Notificationfield = () => {
   return (

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { RiEyeCloseFill, RiEyeFill } from "react-icons/ri";
 import { useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import { ToastContainer, toast } from "react-toastify";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -16,7 +17,7 @@ const Registration = () => {
   //Authentication error
   let [firebaseerr, setFirebaseErr] = useState("");
   //Authentication success
-  let [regsuccess, setRegSuccess] = useState("");
+  // let [regsuccess, setRegSuccess] = useState("");
   //react loading
   let [loading, setLoading] = useState(false);
   //redirection
@@ -40,17 +41,20 @@ const Registration = () => {
   // all password is correct
   let [passCorrect, setPassCorrect] = useState(false);
 
+  //handle email
   let handleEmail = (e) => {
     setEmail(e.target.value);
     setEmailErr("");
     setFirebaseErr("");
   };
 
+  //handle fullname
   let handleFullname = (e) => {
     setFullname(e.target.value);
     setFullnameErr("");
   };
 
+  //handle password
   let handlePassword = (e) => {
     let count = 0;
     // A-Z validation
@@ -99,6 +103,7 @@ const Registration = () => {
     setPasswordErr("");
   };
 
+  //handle submit
   let handleSubmit = () => {
     if (!email) {
       setEmailErr("Email is required");
@@ -148,13 +153,16 @@ const Registration = () => {
             })
               .then(() => {
                 sendEmailVerification(auth.currentUser).then(() => {
-                  setRegSuccess(
+                  toast(
                     "Registration Successfull. Please varify your email address"
                   );
+                  // setRegSuccess(
+                  //   "Registration Successfull. Please varify your email address"
+                  // );
+                  setTimeout(() => {
+                    navigate("/login");
+                  }, 5000);
                 });
-                setTimeout(() => {
-                  navigate("/login");
-                }, 2000);
               })
               .catch((error) => {
                 console.log(error);
@@ -177,6 +185,11 @@ const Registration = () => {
 
   return (
     <section>
+      <ToastContainer
+        position="top-center"
+        closeOnClick={false}
+        theme="colored"
+      />
       <div className="grid grid-cols-1 sml:grid-cols-2 sml:gap-x-10 md:!gap-x-12 lg:!gap-x-16 pl-2.5 pr-2.5 sml:pr-0">
         <div className="flex flex-col items-center sml:items-end justify-center">
           <div className="lg:w-500px mt-10 sml:mt-3.5 md:!mt-8 lg:!mt-0">
@@ -186,11 +199,11 @@ const Registration = () => {
             <p className="font-nunito text-xl sml:text-lg md:!text-xl font-normal text-gray text-center sml:text-left">
               Free register and you can enjoy it
             </p>
-            {regsuccess && (
+            {/* {regsuccess && (
               <p className="bg-green-500 text-white mt-2 px-3 py-1.5 text-lg inline-block font-semibold font-nunito rounded-md">
                 {regsuccess}
               </p>
-            )}
+            )} */}
             <form action="#" className="lg:w-[370px] mt-10 sml:mt-6 md:!mt-9">
               <div className="relative">
                 <input
@@ -290,7 +303,7 @@ const Registration = () => {
                   />
                 )}
               </div>
-              <div className="relative mt-12 sml:mt-5 md:!mt-10">
+              <div className="mt-12 sml:mt-5 md:!mt-10">
                 {loading ? (
                   <div className="flex justify-center items-center sml:h-14 md:!h-full">
                     <ThreeDots

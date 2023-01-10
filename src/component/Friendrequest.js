@@ -1,7 +1,6 @@
 import React from "react";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import SimpleBar from "simplebar-react";
-import "simplebar-react/dist/simplebar.min.css";
 
 const Friendrequest = () => {
   return (
