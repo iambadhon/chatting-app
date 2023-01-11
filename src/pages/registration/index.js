@@ -161,7 +161,7 @@ const Registration = () => {
                   // );
                   setTimeout(() => {
                     navigate("/login");
-                  }, 5000);
+                  }, 4000);
                 });
               })
               .catch((error) => {

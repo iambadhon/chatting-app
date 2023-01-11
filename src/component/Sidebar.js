@@ -4,16 +4,31 @@ import { BiMessageDetail } from "react-icons/bi";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { TbSettings } from "react-icons/tb";
 import { MdLogout } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 
 const Sidebar = ({ active }) => {
+  const auth = getAuth();
+
+  //redirection
+  let navigate = useNavigate();
+
+  //handle sign out
+  let handleSignOut = () => {
+    signOut(auth).then(() => {
+      navigate("/login");
+    });
+  };
   return (
     <div className="bg-primary w-full lg:px-5 xl:px-11 p-2 lg:py-9 lg:rounded-3xl overflow-y-hidden lg:overflow-x-hidden fixed bottom-0 left-0 z-10 lg:static flex justify-center lg:flex-col gap-x-5 sml:gap-x-16 md:!gap-x-28">
       <div className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] lg:w-[100px] lg:h-[100px] rounded-full overflow-hidden">
         <picture>
-          <img src="images/profile.png" alt="Profile" />
+          <img className="w-full h-full" src={auth.currentUser.photoURL} />
         </picture>
       </div>
+      <h2 className="font-nunito text-xl font-bold text-white text-center mt-2">
+        {auth.currentUser.displayName}
+      </h2>
       <div className="flex flex-row lg:flex-col items-center gap-y-20 gap-x-5 sml:gap-x-6 md:!gap-x-11 lg:mt-24">
         <div
           className={`${
@@ -72,7 +87,10 @@ const Sidebar = ({ active }) => {
           </Link>
         </div>
         <div className="sml:ml-10 md:!ml-16 lg:!ml-0 lg:mt-[105px] xl:mt-24 lg:mb-3.5">
-          <MdLogout className="text-[32px] sml:text-4xl md:!text-5xl text-white cursor-pointer" />
+          <MdLogout
+            onClick={handleSignOut}
+            className="text-[32px] sml:text-4xl md:!text-5xl text-white cursor-pointer"
+          />
         </div>
       </div>
     </div>

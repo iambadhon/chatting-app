@@ -100,7 +100,7 @@ const LogIn = () => {
             // setLoginSuccess("Login Successfull. Please wait a secend");
             setTimeout(() => {
               navigate("/");
-            }, 3000);
+            }, 4000);
           })
           .catch((error) => {
             setLoading(false);
@@ -154,13 +154,20 @@ const LogIn = () => {
             setTimeout(() => {
               setForgotLoading(false);
               setForgotPassShow(false);
-            }, 5000);
+            }, 4000);
           })
           .catch((error) => {
             setForgotLoading(false);
             const errorCode = error.code;
             if (errorCode.includes("auth/user-not-found")) {
-              setFirebaseForgotErr("Sorry! Email not match.");
+              setFirebaseForgotErr(
+                "Sorry! User not found! Enter your email correctly."
+              );
+            }
+            if (errorCode.includes("auth/too-many-requests")) {
+              setFirebaseForgotErr(
+                "Sorry! Too many requests. Try again later."
+              );
             }
           });
       }
@@ -312,21 +319,21 @@ const LogIn = () => {
 
       {/* forgot password modal */}
       {forgotpassshow && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-black/75 flex justify-center items-center z-10">
-          <div className="p-10 bg-white rounded-lg">
-            <h2 className="text-5xl font-bold text-primary font-nunito">
+        <div className="fixed top-0 left-0 w-full h-screen bg-black/75 flex justify-center items-center z-10 px-4">
+          <div className="p-6 md:p-10 bg-white rounded-lg">
+            <h2 className="text-3xl md:text-5xl font-bold text-primary font-nunito">
               Forgot Password
             </h2>
-            <div className="relative mt-10">
+            <div className="relative mt-7 md:mt-10">
               <input
-                className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 px-8 sml:px-5 md:!px-8 font-nunito text-xl focus:border-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
+                className={`w-full text-durkblue border-2 border-solid rounded-lg py-3.5 md:py-6 px-5 md:px-8 font-nunito text-xl focus:border-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
                   forgotemailerr ? "border-red-500" : "border-gray/25"
                 } ${firebaseforgoterr ? "border-red-500" : "border-gray/25"}`}
                 type="email"
                 placeholder="email"
                 onChange={handleForgotEmail}
               />
-              <p className="absolute -top-2.5 left-8 bg-white px-5 text-sm font-semibold font-nunito text-[#11175db3] pointer-events-none peer-placeholder-shown:top-[26px] sml:peer-placeholder-shown:top-[17px] md:peer-placeholder-shown:!top-[26px] peer-placeholder-shown:left-4 sml:peer-placeholder-shown:left-2 md:peer-placeholder-shown:!left-4 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-xl sm:peer-focus:-top-2.5 sml:peer-focus:!-top-2.5 peer-focus:left-8 sml:peer-focus:!left-8 peer-focus:bg-white peer-focus:text-sm peer-focus:text-primary duration-300">
+              <p className="absolute -top-2.5 left-6 md:left-8 bg-white px-3 md:px-5 text-sm font-semibold font-nunito text-[#11175db3] pointer-events-none peer-placeholder-shown:top-[17px] md:peer-placeholder-shown:top-[26px] peer-placeholder-shown:left-2 md:peer-placeholder-shown:left-4 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-xl peer-focus:-top-2.5 md:peer-focus:-top-2.5 peer-focus:left-6 md:peer-focus:left-8 peer-focus:bg-white peer-focus:text-sm peer-focus:text-primary duration-300">
                 Email Addres
               </p>
               {forgotemailerr && (
@@ -340,7 +347,7 @@ const LogIn = () => {
                 </p>
               )}
             </div>
-            <div className="mt-8 flex items-center">
+            <div className="mt-6 md:mt-8 flex items-center gap-x-5">
               {forgotloading ? (
                 <div className="inline-block">
                   <ThreeDots
@@ -354,7 +361,7 @@ const LogIn = () => {
                 </div>
               ) : (
                 <button
-                  className="my_btn !text-xl !rounded-md !p-4 !font-nunito after:hover:!bg-lightwhite"
+                  className="my_btn !text-base md:!text-xl !rounded-md !p-3 md:!p-4 !font-nunito after:hover:!bg-lightwhite"
                   type="button"
                   onClick={handleForgotPassword}
                 >
@@ -363,7 +370,7 @@ const LogIn = () => {
               )}
 
               <button
-                className="my_btn !text-xl !rounded-md !p-4 !font-nunito after:hover:!bg-lightwhite ml-5 !bg-red-500 !border-red-500"
+                className="my_btn !text-base md:!text-xl !rounded-md !p-3 md:!p-4 !font-nunito after:hover:!bg-lightwhite !bg-red-500 !border-red-500"
                 type="button"
                 onClick={() => setForgotPassShow(false)}
               >
