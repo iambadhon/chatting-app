@@ -12,8 +12,11 @@ import {
   GoogleAuthProvider,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 
 const LogIn = () => {
+  //write data
+  const db = getDatabase();
   //google login
   const provider = new GoogleAuthProvider();
   //Authentication
@@ -123,10 +126,26 @@ const LogIn = () => {
 
   //google login
   let handleGoogleLogin = () => {
-    signInWithPopup(auth, provider).then(() => {
-      navigate("/");
+    signInWithPopup(auth, provider).then((user) => {
+      set(ref(db, "users/" + user.user.uid), {
+        name: user.user.displayName,
+        email: user.user.email,
+        photoURL: user.user.photoURL,
+      })
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
   };
+
+  // let handleGoogleLogin = () => {
+  //   signInWithPopup(auth, provider).then(() => {
+  //     navigate("/");
+  //   });
+  // };
 
   //handle Forgot Email
   let handleForgotEmail = (e) => {

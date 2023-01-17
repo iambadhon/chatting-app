@@ -10,6 +10,7 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 
 const Registration = () => {
   //Authentication
@@ -18,6 +19,9 @@ const Registration = () => {
   let [firebaseerr, setFirebaseErr] = useState("");
   //Authentication success
   // let [regsuccess, setRegSuccess] = useState("");
+
+  //write data
+  const db = getDatabase();
   //react loading
   let [loading, setLoading] = useState(false);
   //redirection
@@ -152,17 +156,30 @@ const Registration = () => {
               photoURL: "images/profile.png",
             })
               .then(() => {
-                sendEmailVerification(auth.currentUser).then(() => {
-                  toast(
-                    "Registration Successfull. Please varify your email address"
-                  );
-                  // setRegSuccess(
-                  //   "Registration Successfull. Please varify your email address"
-                  // );
-                  setTimeout(() => {
-                    navigate("/login");
-                  }, 4000);
-                });
+                sendEmailVerification(auth.currentUser)
+                  .then(() => {
+                    toast(
+                      "Registration Successfull. Please varify your email address"
+                    );
+                    // setRegSuccess(
+                    //   "Registration Successfull. Please varify your email address"
+                    // );
+                  })
+                  .then(() => {
+                    set(ref(db, "users/" + user.user.uid), {
+                      name: user.user.displayName,
+                      email: user.user.email,
+                      photoURL: user.user.photoURL,
+                    })
+                      .then(() => {
+                        setTimeout(() => {
+                          navigate("/login");
+                        }, 4000);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  });
               })
               .catch((error) => {
                 console.log(error);
