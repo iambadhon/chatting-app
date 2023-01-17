@@ -189,8 +189,9 @@ const Registration = () => {
         position="top-center"
         closeOnClick={false}
         theme="colored"
+        className={`!px-3 !mt-3`}
       />
-      <div className="grid grid-cols-1 sml:grid-cols-2 sml:gap-x-10 md:!gap-x-12 lg:!gap-x-16 pl-2.5 pr-2.5 sml:pr-0">
+      <div className="grid grid-cols-1 sml:grid-cols-2 sml:gap-x-10 md:!gap-x-12 lg:!gap-x-16 pl-4 pr-4 sml:pr-0">
         <div className="flex flex-col items-center sml:items-end justify-center">
           <div className="lg:w-500px mt-10 sml:mt-3.5 md:!mt-8 lg:!mt-0">
             <h1 className="font-nunito text-4xl sml:text-3xl md:!text-4xl font-bold mb-3 sml:mb-2 md:!mb-3 text-durkblue text-center sml:text-left">
