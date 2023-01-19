@@ -225,7 +225,7 @@ const LogIn = () => {
             <form action="#" className="lg:w-[370px] mt-12">
               <div className="relative">
                 <input
-                  className={`w-full text-durkblue border-b-2 border-solid py-3 font-nunito text-xl focus:border-b-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
+                  className={`w-full text-durkblue border-b-2 border-solid py-3 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
                     emailerr ? "border-red-500" : "border-gray/25"
                   } ${firebaseemailerr ? "border-red-500" : "border-gray/25"}`}
                   type="email"
@@ -248,7 +248,7 @@ const LogIn = () => {
               </div>
               <div className="relative mt-14 sml:mt-10 md:!mt-14">
                 <input
-                  className={`w-full text-durkblue border-b-2 border-solid py-3 pr-11 font-nunito text-xl focus:border-b-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
+                  className={`w-full text-durkblue border-b-2 border-solid py-3 pr-11 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
                     passworderr ? "border-red-500" : "border-gray/25"
                   } ${firebasepasserr ? "border-red-500" : "border-gray/25"}`}
                   type={passwordshow ? "text" : "password"}
@@ -346,7 +346,7 @@ const LogIn = () => {
             </h2>
             <div className="relative mt-7 md:mt-10">
               <input
-                className={`w-full text-durkblue border-2 border-solid rounded-lg py-3.5 md:py-6 px-5 md:px-8 font-nunito text-xl focus:border-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
+                className={`w-full text-durkblue border-2 border-solid rounded-lg py-3.5 md:py-6 px-5 md:px-8 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
                   forgotemailerr ? "border-red-500" : "border-gray/25"
                 } ${firebaseforgoterr ? "border-red-500" : "border-gray/25"}`}
                 type="email"

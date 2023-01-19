@@ -225,7 +225,7 @@ const Registration = () => {
             <form action="#" className="lg:w-[370px] mt-10 sml:mt-6 md:!mt-9">
               <div className="relative">
                 <input
-                  className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 px-8 sml:px-5 md:!px-8 font-nunito text-xl focus:border-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
+                  className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 px-8 sml:px-5 md:!px-8 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
                     emailerr ? "border-red-500" : "border-gray/25"
                   }  ${firebaseerr ? "border-red-500" : "border-gray/25"}`}
                   type="email"
@@ -248,7 +248,7 @@ const Registration = () => {
               </div>
               <div className="relative mt-8 sml:mt-5 md:!mt-8">
                 <input
-                  className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 px-8 sml:px-5 md:!px-8 font-nunito text-xl focus:border-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
+                  className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 px-8 sml:px-5 md:!px-8 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
                     fullnameerr ? "border-red-500" : "border-gray/25"
                   }`}
                   type="text"
@@ -266,7 +266,7 @@ const Registration = () => {
               </div>
               <div className="relative mt-8 sml:mt-5 md:!mt-8">
                 <input
-                  className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 pl-8 sml:pl-5 md:!pl-8 pr-11 font-nunito text-xl focus:border-2 focus:border-solid focus:border-primary outline-none placeholder-transparent peer ${
+                  className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 pl-8 sml:pl-5 md:!pl-8 pr-11 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
                     passworderr ? "border-red-500" : "border-gray/25"
                   }`}
                   type={passwordshow ? "text" : "password"}
