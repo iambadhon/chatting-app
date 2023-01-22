@@ -99,7 +99,7 @@ const LogIn = () => {
         setLoading(true);
         signInWithEmailAndPassword(auth, email, password)
           .then((user) => {
-            toast("Login Successfull. Please wait a secend");
+            toast("Login Successfull. Please wait a second");
             // setLoginSuccess("Login Successfull. Please wait a secend");
             setTimeout(() => {
               navigate("/");

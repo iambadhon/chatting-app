@@ -78,7 +78,7 @@ const Sidebar = ({ active }) => {
   };
 
   //handle Upload Image
-  const getCropData = () => {
+  const handleUploadImage = () => {
     setLoading(true);
     const storageRef = ref(storage, imgname);
     if (img !== "") {
@@ -277,7 +277,7 @@ const Sidebar = ({ active }) => {
                   <button
                     className="my_btn !text-base md:!text-xl !rounded-md !p-3 md:!p-4 !font-nunito after:hover:!bg-lightwhite"
                     type="button"
-                    onClick={getCropData}
+                    onClick={handleUploadImage}
                   >
                     Upload Picture
                   </button>

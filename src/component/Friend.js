@@ -1,8 +1,42 @@
 import React from "react";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import SimpleBar from "simplebar-react";
+import { useEffect, useState } from "react";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  push,
+  remove,
+} from "firebase/database";
+import { getAuth } from "firebase/auth";
 
 const Friend = ({ marginT }) => {
+  //Authentication
+  const auth = getAuth();
+  //Read data
+  const db = getDatabase();
+  //friend request
+  let [friends, setFriends] = useState([]);
+
+  //friend request
+  useEffect(() => {
+    const usersRef = ref(db, "friends");
+    onValue(usersRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        if (
+          auth.currentUser.uid == item.val().receiverid ||
+          auth.currentUser.uid == item.val().senderid
+        ) {
+          arr.push(item.val());
+        }
+      });
+      setFriends(arr);
+    });
+  }, []);
+
   return (
     <div
       style={{ marginTop: `${marginT}` }}
@@ -15,96 +49,30 @@ const Friend = ({ marginT }) => {
         </a>
       </div>
       <SimpleBar className="h-[385px] px-4 pt-5">
-        <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4">
-          <div className="flex items-center gap-2">
-            <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
-              <img src="images/profile.png" alt="Profile" />
-            </picture>
+        {friends.map((item) => (
+          <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+            <div className="flex items-center gap-2">
+              <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                <img src="images/profile.png" alt="Profile" />
+              </picture>
+              <div>
+                <h3 className="font-pop text-lg text-black font-semibold">
+                  {auth.currentUser.uid == item.senderid ? (
+                    <h3>{item.receivername}</h3>
+                  ) : (
+                    <h3>{item.sendername}</h3>
+                  )}
+                </h3>
+                <p className="font-pop text-sm text-gray font-medium">
+                  Hi Guys, Wassup!
+                </p>
+              </div>
+            </div>
             <div>
-              <h3 className="font-pop text-lg text-black font-semibold">
-                Friends Reunion
-              </h3>
-              <p className="font-pop text-sm text-gray font-medium">
-                Hi Guys, Wassup!
-              </p>
+              <button className="my_btn">Block</button>
             </div>
           </div>
-          <div>
-            <button className="my_btn">Block</button>
-          </div>
-        </div>
-        <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4">
-          <div className="flex items-center gap-2">
-            <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
-              <img src="images/profile.png" alt="Profile" />
-            </picture>
-            <div>
-              <h3 className="font-pop text-lg text-black font-semibold">
-                Friends Reunion
-              </h3>
-              <p className="font-pop text-sm text-gray font-medium">
-                Hi Guys, Wassup!
-              </p>
-            </div>
-          </div>
-          <div>
-            <button className="my_btn">Block</button>
-          </div>
-        </div>
-        <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4">
-          <div className="flex items-center gap-2">
-            <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
-              <img src="images/profile.png" alt="Profile" />
-            </picture>
-            <div>
-              <h3 className="font-pop text-lg text-black font-semibold">
-                Friends Reunion
-              </h3>
-              <p className="font-pop text-sm text-gray font-medium">
-                Hi Guys, Wassup!
-              </p>
-            </div>
-          </div>
-          <div>
-            <button className="my_btn">Block</button>
-          </div>
-        </div>
-        <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4">
-          <div className="flex items-center gap-2">
-            <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
-              <img src="images/profile.png" alt="Profile" />
-            </picture>
-            <div>
-              <h3 className="font-pop text-lg text-black font-semibold">
-                Friends Reunion
-              </h3>
-              <p className="font-pop text-sm text-gray font-medium">
-                Hi Guys, Wassup!
-              </p>
-            </div>
-          </div>
-          <div>
-            <button className="my_btn">Block</button>
-          </div>
-        </div>
-        <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
-          <div className="flex items-center gap-2">
-            <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
-              <img src="images/profile.png" alt="Profile" />
-            </picture>
-            <div>
-              <h3 className="font-pop text-lg text-black font-semibold">
-                Friends Reunion
-              </h3>
-              <p className="font-pop text-sm text-gray font-medium">
-                Hi Guys, Wassup!
-              </p>
-            </div>
-          </div>
-          <div>
-            <button className="my_btn">Block</button>
-          </div>
-        </div>
+        ))}
       </SimpleBar>
     </div>
   );

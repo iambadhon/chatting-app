@@ -1,9 +1,8 @@
 import React from "react";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import SimpleBar from "simplebar-react";
-import { getDatabase, ref, onValue } from "firebase/database";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 const Userlist = () => {
@@ -13,6 +12,10 @@ const Userlist = () => {
   const db = getDatabase();
   //users list
   let [userslist, setUsersList] = useState([]);
+  //friend request
+  let [friendrequest, setFriendRequest] = useState([]);
+  //friends list
+  let [friendlist, setFriendList] = useState([]);
 
   useEffect(() => {
     const usersRef = ref(db, "users/");
@@ -20,10 +23,43 @@ const Userlist = () => {
       let arr = [];
       snapshot.forEach((item) => {
         if (item.key !== auth.currentUser.uid) {
-          arr.push(item.val());
+          arr.push({ ...item.val(), id: item.key });
         }
       });
       setUsersList(arr);
+    });
+  }, []);
+
+  //handle Friend Request
+  let handleFriendRequest = (item) => {
+    set(push(ref(db, "friendrequest")), {
+      sendername: auth.currentUser.displayName,
+      senderid: auth.currentUser.uid,
+      receivername: item.name,
+      receiverid: item.id,
+    });
+  };
+
+  useEffect(() => {
+    const friendRequestRef = ref(db, "friendrequest/");
+    onValue(friendRequestRef, (snapshot) => {
+      let friendRequestArr = [];
+      snapshot.forEach((item) => {
+        friendRequestArr.push(item.val().receiverid + item.val().senderid);
+      });
+      setFriendRequest(friendRequestArr);
+    });
+  }, []);
+
+  //friends list
+  useEffect(() => {
+    const friendRequestRef = ref(db, "friends");
+    onValue(friendRequestRef, (snapshot) => {
+      let friendRequestArr = [];
+      snapshot.forEach((item) => {
+        friendRequestArr.push(item.val().receiverid + item.val().senderid);
+      });
+      setFriendList(friendRequestArr);
     });
   }, []);
 
@@ -55,7 +91,20 @@ const Userlist = () => {
               </div>
             </div>
             <div>
-              <button className="my_btn">Add</button>
+              {friendlist.includes(item.id + auth.currentUser.uid) ||
+              friendlist.includes(auth.currentUser.uid + item.id) ? (
+                <button className="my_btn">Friend</button>
+              ) : friendrequest.includes(item.id + auth.currentUser.uid) ||
+                friendrequest.includes(auth.currentUser.uid + item.id) ? (
+                <button className="my_btn">Pending</button>
+              ) : (
+                <button
+                  onClick={() => handleFriendRequest(item)}
+                  className="my_btn"
+                >
+                  Add Friend
+                </button>
+              )}
             </div>
           </div>
         ))}
