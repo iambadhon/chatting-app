@@ -30,12 +30,33 @@ const Friend = ({ marginT }) => {
           auth.currentUser.uid == item.val().receiverid ||
           auth.currentUser.uid == item.val().senderid
         ) {
-          arr.push(item.val());
+          arr.push({ ...item.val(), id: item.key });
         }
       });
       setFriends(arr);
     });
   }, []);
+
+  //handle block
+  let handleBlock = (item) => {
+    auth.currentUser.uid == item.senderid
+      ? set(push(ref(db, "blockusers")), {
+          block: item.receivername,
+          blockid: item.receiverid,
+          blockby: item.sendername,
+          blockbyid: item.senderid,
+        }).then(() => {
+          remove(ref(db, "friends/" + item.id));
+        })
+      : set(push(ref(db, "blockusers")), {
+          block: item.sendername,
+          blockid: item.senderid,
+          blockby: item.receivername,
+          blockbyid: item.receiverid,
+        }).then(() => {
+          remove(ref(db, "friends/" + item.id));
+        });
+  };
 
   return (
     <div
@@ -64,12 +85,14 @@ const Friend = ({ marginT }) => {
                   )}
                 </h3>
                 <p className="font-pop text-sm text-gray font-medium">
-                  Hi Guys, Wassup!
+                  {item.date}
                 </p>
               </div>
             </div>
             <div>
-              <button className="my_btn">Block</button>
+              <button onClick={() => handleBlock(item)} className="my_btn">
+                Block
+              </button>
             </div>
           </div>
         ))}
