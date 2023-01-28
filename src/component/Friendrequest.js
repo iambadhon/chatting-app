@@ -15,7 +15,7 @@ import { getAuth } from "firebase/auth";
 const Friendrequest = () => {
   //Authentication
   const auth = getAuth();
-  //Read data
+  //data base
   const db = getDatabase();
   //friend request
   let [friendrequest, setFriendRequest] = useState([]);
@@ -26,7 +26,7 @@ const Friendrequest = () => {
     onValue(usersRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (item.val().receiverid == auth.currentUser.uid) {
+        if (item.val().receiverId == auth.currentUser.uid) {
           arr.push({ ...item.val(), id: item.key });
         }
       });
@@ -38,10 +38,10 @@ const Friendrequest = () => {
   let handleAccecptFriendRequest = (item) => {
     set(push(ref(db, "friends")), {
       id: item.id,
-      sendername: item.sendername,
-      senderid: item.senderid,
-      receivername: item.receivername,
-      receiverid: item.receiverid,
+      senderName: item.senderName,
+      senderId: item.senderId,
+      receiverName: item.receiverName,
+      receiverId: item.receiverId,
       date: `${new Date().getDate()}/${
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,
@@ -69,7 +69,7 @@ const Friendrequest = () => {
               </picture>
               <div>
                 <h3 className="font-pop text-lg text-black font-semibold">
-                  {item.sendername}
+                  {item.senderName}
                 </h3>
                 <p className="font-pop text-sm text-gray font-medium">
                   Hi Guys, Wassup!

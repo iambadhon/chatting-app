@@ -15,7 +15,7 @@ import { getAuth } from "firebase/auth";
 const Blockeduser = () => {
   //Authentication
   const auth = getAuth();
-  //Read data
+  //data base
   const db = getDatabase();
   //Block User
   let [blockuser, setBlockUser] = useState([]);
@@ -26,11 +26,11 @@ const Blockeduser = () => {
     onValue(usersRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (item.val().blockbyid == auth.currentUser.uid) {
+        if (item.val().blockById == auth.currentUser.uid) {
           arr.push({
             id: item.key,
             block: item.val().block,
-            blockid: item.val().blockid,
+            blockId: item.val().blockId,
             date: `${new Date().getDate()}/${
               new Date().getMonth() + 1
             }/${new Date().getFullYear()}`,
@@ -38,8 +38,8 @@ const Blockeduser = () => {
         } else {
           arr.push({
             id: item.key,
-            block: item.val().blockby,
-            blockbyid: item.val().blockbyid,
+            block: item.val().blockBy,
+            blockById: item.val().blockById,
             date: `${new Date().getDate()}/${
               new Date().getMonth() + 1
             }/${new Date().getFullYear()}`,
@@ -53,10 +53,10 @@ const Blockeduser = () => {
   //handle Unblock
   let handleUnblock = (item) => {
     set(push(ref(db, "friends")), {
-      sendername: item.block,
-      senderid: item.blockid,
-      receivername: auth.currentUser.displayName,
-      receiverid: auth.currentUser.uid,
+      senderName: item.block,
+      senderId: item.blockId,
+      receiverName: auth.currentUser.displayName,
+      receiverId: auth.currentUser.uid,
       date: `${new Date().getDate()}/${
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,
@@ -92,7 +92,7 @@ const Blockeduser = () => {
               </div>
             </div>
             <div>
-              {!item.blockbyid && (
+              {!item.blockById && (
                 <button onClick={() => handleUnblock(item)} className="my_btn">
                   Unblock
                 </button>

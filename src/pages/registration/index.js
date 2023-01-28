@@ -20,7 +20,7 @@ const Registration = () => {
   //Authentication success
   // let [regsuccess, setRegSuccess] = useState("");
 
-  //write data
+  //data base
   const db = getDatabase();
   //react loading
   let [loading, setLoading] = useState(false);
@@ -60,6 +60,9 @@ const Registration = () => {
 
   //handle password
   let handlePassword = (e) => {
+    setPassword(e.target.value);
+    setPasswordErr("");
+
     let count = 0;
     // A-Z validation
     if (/^(?=.*?[A-Z])/.test(e.target.value)) {
@@ -102,13 +105,11 @@ const Registration = () => {
     } else {
       setPassCorrect(false);
     }
-
-    setPassword(e.target.value);
-    setPasswordErr("");
   };
 
   //handle submit
   let handleSubmit = () => {
+    //email error
     if (!email) {
       setEmailErr("Email is required");
     } else {
@@ -116,7 +117,7 @@ const Registration = () => {
         setEmailErr("Valid email is required");
       }
     }
-
+    //full name error
     if (!fullname) {
       setFullnameErr("Full name is required");
     } else {
@@ -124,7 +125,7 @@ const Registration = () => {
         setFullnameErr("Full name must be greater than 3");
       }
     }
-
+    //password error
     if (!password) {
       setPasswordErr("Password is required");
     } else {

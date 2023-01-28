@@ -15,7 +15,7 @@ import {
 import { getDatabase, ref, set } from "firebase/database";
 
 const LogIn = () => {
-  //write data
+  //data base
   const db = getDatabase();
   //google login
   const provider = new GoogleAuthProvider();
@@ -45,7 +45,7 @@ const LogIn = () => {
   let [forgotemail, setForgotEmail] = useState("");
   //forgot email error
   let [forgotemailerr, setForgotEmailErr] = useState("");
-  //forgot email error
+  //firebase forgot email error
   let [firebaseforgoterr, setFirebaseForgotErr] = useState("");
   //forgot react loading
   let [forgotloading, setForgotLoading] = useState("");
@@ -173,6 +173,9 @@ const LogIn = () => {
             setTimeout(() => {
               setForgotLoading(false);
               setForgotPassShow(false);
+              setForgotEmail("");
+              setForgotEmailErr("");
+              setFirebaseForgotErr("");
             }, 4000);
           })
           .catch((error) => {

@@ -15,7 +15,7 @@ import { getAuth } from "firebase/auth";
 const Friend = ({ marginT }) => {
   //Authentication
   const auth = getAuth();
-  //Read data
+  //data base
   const db = getDatabase();
   //friend request
   let [friends, setFriends] = useState([]);
@@ -27,8 +27,8 @@ const Friend = ({ marginT }) => {
       let arr = [];
       snapshot.forEach((item) => {
         if (
-          auth.currentUser.uid == item.val().receiverid ||
-          auth.currentUser.uid == item.val().senderid
+          auth.currentUser.uid == item.val().receiverId ||
+          auth.currentUser.uid == item.val().senderId
         ) {
           arr.push({ ...item.val(), id: item.key });
         }
@@ -39,20 +39,20 @@ const Friend = ({ marginT }) => {
 
   //handle block
   let handleBlock = (item) => {
-    auth.currentUser.uid == item.senderid
+    auth.currentUser.uid == item.senderId
       ? set(push(ref(db, "blockusers")), {
-          block: item.receivername,
-          blockid: item.receiverid,
-          blockby: item.sendername,
-          blockbyid: item.senderid,
+          block: item.receiverName,
+          blockId: item.receiverId,
+          blockBy: item.senderName,
+          blockById: item.senderId,
         }).then(() => {
           remove(ref(db, "friends/" + item.id));
         })
       : set(push(ref(db, "blockusers")), {
-          block: item.sendername,
-          blockid: item.senderid,
-          blockby: item.receivername,
-          blockbyid: item.receiverid,
+          block: item.senderName,
+          blockId: item.senderId,
+          blockBy: item.receiverName,
+          blockById: item.receiverId,
         }).then(() => {
           remove(ref(db, "friends/" + item.id));
         });
@@ -78,10 +78,10 @@ const Friend = ({ marginT }) => {
               </picture>
               <div>
                 <h3 className="font-pop text-lg text-black font-semibold">
-                  {auth.currentUser.uid == item.senderid ? (
-                    <h3>{item.receivername}</h3>
+                  {auth.currentUser.uid == item.senderId ? (
+                    <h3>{item.receiverName}</h3>
                   ) : (
-                    <h3>{item.sendername}</h3>
+                    <h3>{item.senderName}</h3>
                   )}
                 </h3>
                 <p className="font-pop text-sm text-gray font-medium">

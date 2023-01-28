@@ -2,7 +2,7 @@ import React from "react";
 import Blockeduser from "../../component/Blockeduser";
 import Friend from "../../component/Friend";
 import Friendrequest from "../../component/Friendrequest";
-import Grouprequest from "../../component/Grouprequest";
+import Grouplist from "../../component/Grouplist";
 import Mygroup from "../../component/Mygroup";
 import Search from "../../component/Search";
 import Sidebar from "../../component/Sidebar";
@@ -41,7 +41,7 @@ const Home = () => {
           <div className="w-full lg:h-[980px] xl:h-full lg:pb-1.5 xl:pb-0 lg:overflow-y-scroll xl:overflow-visible lg:scrollbar-hide xl:scrollbar-default lg:w-[88%] xl:w-[86%] flex flex-col lg:flex-row gap-x-8 lg:flex-wrap xl:flex-nowrap">
             <div className="w-full lg:w-[48%] xl:w-[40%]">
               <Search />
-              <Grouprequest />
+              <Grouplist />
               <Friendrequest />
             </div>
             <div className="w-full lg:w-[48%] xl:w-[30%]">

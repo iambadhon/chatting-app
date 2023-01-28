@@ -8,7 +8,7 @@ import { getAuth } from "firebase/auth";
 const Userlist = () => {
   //Authentication
   const auth = getAuth();
-  //Read data
+  //data base
   const db = getDatabase();
   //users list
   let [userslist, setUsersList] = useState([]);
@@ -33,10 +33,10 @@ const Userlist = () => {
   //handle Friend Request
   let handleFriendRequest = (item) => {
     set(push(ref(db, "friendrequest")), {
-      sendername: auth.currentUser.displayName,
-      senderid: auth.currentUser.uid,
-      receivername: item.name,
-      receiverid: item.id,
+      senderName: auth.currentUser.displayName,
+      senderId: auth.currentUser.uid,
+      receiverName: item.name,
+      receiverId: item.id,
     });
   };
 
@@ -45,7 +45,7 @@ const Userlist = () => {
     onValue(friendRequestRef, (snapshot) => {
       let friendRequestArr = [];
       snapshot.forEach((item) => {
-        friendRequestArr.push(item.val().receiverid + item.val().senderid);
+        friendRequestArr.push(item.val().receiverId + item.val().senderId);
       });
       setFriendRequest(friendRequestArr);
     });
