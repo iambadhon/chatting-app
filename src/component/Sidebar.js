@@ -132,8 +132,9 @@ const Sidebar = ({ active }) => {
         <div className="relative group">
           <picture>
             <img
-              className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] lg:w-[100px] lg:h-[100px] border-4 border-solid border-white bg-white rounded-full overflow-hidden lg:mx-auto"
+              className="w-[60px] h-[60px] md:w-[80px] md:h-[80px] lg:w-[100px] lg:h-[100px] border-4 border-solid border-white bg-white text-primary rounded-full overflow-hidden lg:mx-auto"
               src={auth.currentUser.photoURL}
+              alt="Profile"
             />
           </picture>
           <button

@@ -78,7 +78,7 @@ const Userlist = () => {
               <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
                 <picture>
                   <img
-                    className="w-full h-full"
+                    className="w-full h-full bg-primary text-white"
                     src={item.photoURL}
                     alt="Profile"
                   />

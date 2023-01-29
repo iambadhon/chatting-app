@@ -11,9 +11,13 @@ const Profilesetting = () => {
         Profile Settings
       </h2>
       <div className="flex items-center gap-x-4 sml:gap-x-6 md:!gap-x-4 lg:!gap-x-6 border-b border-solid border-gray pb-7 lg:mx-0 xl:mx-5 mt-12">
-        <div className="w-[80px] h-[80px] sml:w-[100px] sml:h-[100px] rounded-full">
+        <div className="w-[80px] h-[80px] sml:w-[100px] sml:h-[100px] rounded-full overflow-hidden">
           <picture>
-            <img src="images/profile.png" alt="Profile Picture" />
+            <img
+              className="bg-primary text-white"
+              src="images/profile.png"
+              alt="Profile Picture"
+            />
           </picture>
         </div>
         <div>
