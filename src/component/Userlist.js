@@ -34,16 +34,19 @@ const Userlist = () => {
 
   //handle Friend Request
   let handleFriendRequest = (item) => {
-    set(push(ref(db, "friendrequest")), {
+    set(push(ref(db, "friendRequest")), {
       senderName: auth.currentUser.displayName,
       senderId: auth.currentUser.uid,
       receiverName: item.name,
       receiverId: item.id,
+      date: `${new Date().getDate()}/${
+        new Date().getMonth() + 1
+      }/${new Date().getFullYear()}`,
     });
   };
 
   useEffect(() => {
-    const friendRequestRef = ref(db, "friendrequest/");
+    const friendRequestRef = ref(db, "friendRequest/");
     onValue(friendRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
@@ -55,8 +58,8 @@ const Userlist = () => {
 
   //friends list
   useEffect(() => {
-    const friendRequestRef = ref(db, "friends");
-    onValue(friendRequestRef, (snapshot) => {
+    const friendsRef = ref(db, "friends");
+    onValue(friendsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
         arr.push(item.val().receiverId + item.val().senderId);
@@ -67,8 +70,8 @@ const Userlist = () => {
 
   //block user
   useEffect(() => {
-    const usersRef = ref(db, "blockusers");
-    onValue(usersRef, (snapshot) => {
+    const blockUsersRef = ref(db, "blockUsers");
+    onValue(blockUsersRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
         arr.push(item.val().blockId + item.val().blockById);

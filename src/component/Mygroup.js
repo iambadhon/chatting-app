@@ -25,8 +25,8 @@ const Mygroup = ({ marginT, hight }) => {
   let [showinfo, setShowInfo] = useState(false);
 
   useEffect(() => {
-    const usersRef = ref(db, "groups");
-    onValue(usersRef, (snapshot) => {
+    const groupsRef = ref(db, "groups");
+    onValue(groupsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
         if (item.val().adminId == auth.currentUser.uid) {
@@ -40,8 +40,8 @@ const Mygroup = ({ marginT, hight }) => {
   //handle Member Join Request Show
   let handleGroupJoinRequestShow = (item) => {
     setShowInfo(true);
-    const usersRef = ref(db, "groupJoinRequest");
-    onValue(usersRef, (snapshot) => {
+    const groupJoinRequestRef = ref(db, "groupJoinRequest");
+    onValue(groupJoinRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((groupitem) => {
         if (
@@ -66,6 +66,9 @@ const Mygroup = ({ marginT, hight }) => {
       userId: item.userId,
       userName: item.userName,
       userPhoto: item.userPhoto,
+      date: `${new Date().getDate()}/${
+        new Date().getMonth() + 1
+      }/${new Date().getFullYear()}`,
     }).then(() => {
       remove(ref(db, "groupJoinRequest/" + item.groupId));
     });
@@ -114,6 +117,9 @@ const Mygroup = ({ marginT, hight }) => {
                     <h3 className="font-pop text-lg text-black font-semibold">
                       {item.userName}
                     </h3>
+                    <p className="font-pop text-sm text-gray font-medium">
+                      {item.date}
+                    </p>
                   </div>
                 </div>
                 <div className="flex flex-col">

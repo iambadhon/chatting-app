@@ -22,8 +22,8 @@ const Friendrequest = () => {
 
   //friend request
   useEffect(() => {
-    const usersRef = ref(db, "friendrequest/");
-    onValue(usersRef, (snapshot) => {
+    const friendRequestRef = ref(db, "friendRequest/");
+    onValue(friendRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
         if (item.val().receiverId == auth.currentUser.uid) {
@@ -46,7 +46,7 @@ const Friendrequest = () => {
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,
     }).then(() => {
-      remove(ref(db, "friendrequest/" + item.id));
+      remove(ref(db, "friendRequest/" + item.id));
     });
   };
 
@@ -76,7 +76,7 @@ const Friendrequest = () => {
                   {item.senderName}
                 </h3>
                 <p className="font-pop text-sm text-gray font-medium">
-                  Hi Guys, Wassup!
+                  {item.date}
                 </p>
               </div>
             </div>

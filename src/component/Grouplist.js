@@ -89,8 +89,8 @@ const Grouplist = () => {
   };
 
   useEffect(() => {
-    const usersRef = ref(db, "groups");
-    onValue(usersRef, (snapshot) => {
+    const groupsRef = ref(db, "groups");
+    onValue(groupsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
         if (item.val().adminId != auth.currentUser.uid) {
@@ -111,6 +111,9 @@ const Grouplist = () => {
       userId: auth.currentUser.uid,
       userName: auth.currentUser.displayName,
       userPhoto: auth.currentUser.photoURL,
+      date: `${new Date().getDate()}/${
+        new Date().getMonth() + 1
+      }/${new Date().getFullYear()}`,
     });
   };
 

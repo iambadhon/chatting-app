@@ -22,8 +22,8 @@ const Blockeduser = () => {
 
   //block user
   useEffect(() => {
-    const usersRef = ref(db, "blockusers");
-    onValue(usersRef, (snapshot) => {
+    const blockUsersRef = ref(db, "blockUsers");
+    onValue(blockUsersRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
         if (item.val().blockById == auth.currentUser.uid) {
@@ -61,7 +61,7 @@ const Blockeduser = () => {
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,
     }).then(() => {
-      remove(ref(db, "blockusers/" + item.id));
+      remove(ref(db, "blockUsers/" + item.id));
     });
   };
 

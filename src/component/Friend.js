@@ -22,8 +22,8 @@ const Friend = ({ marginT }) => {
 
   //friend
   useEffect(() => {
-    const usersRef = ref(db, "friends");
-    onValue(usersRef, (snapshot) => {
+    const friendsRef = ref(db, "friends");
+    onValue(friendsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
         if (
@@ -40,7 +40,7 @@ const Friend = ({ marginT }) => {
   //handle block
   let handleBlock = (item) => {
     auth.currentUser.uid == item.senderId
-      ? set(push(ref(db, "blockusers")), {
+      ? set(push(ref(db, "blockUsers")), {
           block: item.receiverName,
           blockId: item.receiverId,
           blockBy: item.senderName,
@@ -48,7 +48,7 @@ const Friend = ({ marginT }) => {
         }).then(() => {
           remove(ref(db, "friends/" + item.id));
         })
-      : set(push(ref(db, "blockusers")), {
+      : set(push(ref(db, "blockUsers")), {
           block: item.senderName,
           blockId: item.senderId,
           blockBy: item.receiverName,
