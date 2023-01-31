@@ -26,24 +26,29 @@ const Blockeduser = () => {
     onValue(blockUsersRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (item.val().blockById == auth.currentUser.uid) {
-          arr.push({
-            id: item.key,
-            block: item.val().block,
-            blockId: item.val().blockId,
-            date: `${new Date().getDate()}/${
-              new Date().getMonth() + 1
-            }/${new Date().getFullYear()}`,
-          });
-        } else {
-          arr.push({
-            id: item.key,
-            block: item.val().blockBy,
-            blockById: item.val().blockById,
-            date: `${new Date().getDate()}/${
-              new Date().getMonth() + 1
-            }/${new Date().getFullYear()}`,
-          });
+        if (
+          item.val().blockId == auth.currentUser.uid ||
+          item.val().blockById == auth.currentUser.uid
+        ) {
+          if (item.val().blockById == auth.currentUser.uid) {
+            arr.push({
+              id: item.key,
+              block: item.val().block,
+              blockId: item.val().blockId,
+              date: `${new Date().getDate()}/${
+                new Date().getMonth() + 1
+              }/${new Date().getFullYear()}`,
+            });
+          } else {
+            arr.push({
+              id: item.key,
+              block: item.val().blockBy,
+              blockById: item.val().blockById,
+              date: `${new Date().getDate()}/${
+                new Date().getMonth() + 1
+              }/${new Date().getFullYear()}`,
+            });
+          }
         }
       });
       setBlockUser(arr);
