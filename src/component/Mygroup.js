@@ -17,8 +17,12 @@ const Mygroup = ({ marginT, hight }) => {
   const auth = getAuth();
   //data base
   const db = getDatabase();
-  //group list
+  //my group list
   let [mygrouplist, setMyGroupList] = useState([]);
+  //group join request
+  let [memberjoinrequest, setMemberJoinRequest] = useState([]);
+  //show info
+  let [showinfo, setShowInfo] = useState(false);
 
   useEffect(() => {
     const usersRef = ref(db, "groups");
@@ -26,12 +30,56 @@ const Mygroup = ({ marginT, hight }) => {
       let arr = [];
       snapshot.forEach((item) => {
         if (item.val().adminId == auth.currentUser.uid) {
-          arr.push(item.val());
+          arr.push({ ...item.val(), groupId: item.key });
         }
       });
       setMyGroupList(arr);
     });
   }, []);
+
+  //handle Member Join Request Show
+  let handleGroupJoinRequestShow = (item) => {
+    setShowInfo(true);
+    const usersRef = ref(db, "groupJoinRequest");
+    onValue(usersRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((groupitem) => {
+        if (
+          item.adminId == auth.currentUser.uid &&
+          item.groupId == groupitem.val().groupId
+        ) {
+          arr.push({ ...groupitem.val(), groupId: groupitem.key });
+        }
+      });
+      setMemberJoinRequest(arr);
+    });
+  };
+
+  //handle Member Request Accept
+  let handleMemberRequestAccept = (item) => {
+    console.log(item);
+    set(push(ref(db, "groupMembers")), {
+      adminId: item.adminId,
+      groupId: item.groupId,
+      groupName: item.groupName,
+      groupTagline: item.groupTagline,
+      userId: item.userId,
+      userName: item.userName,
+      userPhoto: item.userPhoto,
+    }).then(() => {
+      remove(ref(db, "groupJoinRequest/" + item.groupId));
+    });
+  };
+
+  //handle Member Request Reject
+  let handleMemberRequestReject = (item) => {
+    remove(ref(db, "groupJoinRequest/" + item.groupId));
+  };
+
+  //handle Member
+  let handleMember = () => {
+    console.log("member");
+  };
 
   return (
     <div
@@ -40,36 +88,88 @@ const Mygroup = ({ marginT, hight }) => {
     >
       <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
         <h2 className="font-pop font-semibold text-xl text-black">My Groups</h2>
-        <a href="#">
+        {showinfo ? (
+          <button onClick={() => setShowInfo(false)} className="my_btn">
+            Go Back
+          </button>
+        ) : (
           <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
-        </a>
+        )}
       </div>
       <SimpleBar style={{ height: `${hight}` }} className="h-[380px] px-4 pt-5">
-        {mygrouplist.map((item) => (
-          <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
-            <div className="flex items-center gap-2">
-              <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
-                <img
-                  className="bg-primary text-white"
-                  src="images/profile.png"
-                  alt="Profile"
-                />
-              </picture>
-              <div>
-                <h3 className="font-pop text-lg text-black font-semibold">
-                  {item.groupName}
-                </h3>
-                <p className="font-pop text-sm text-gray font-medium">
-                  {item.groupTagline}
-                </p>
+        {showinfo
+          ? memberjoinrequest.map((item) => (
+              <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+                <div className="flex items-center gap-2">
+                  <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                    <picture>
+                      <img
+                        className="bg-primary text-white h-full w-full"
+                        src={item.userPhoto}
+                        alt="Profile"
+                      />
+                    </picture>
+                  </div>
+                  <div>
+                    <h3 className="font-pop text-lg text-black font-semibold">
+                      {item.userName}
+                    </h3>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <button
+                    onClick={() => handleMemberRequestAccept(item)}
+                    className="my_btn"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onClick={() => handleMemberRequestReject(item)}
+                    className="my_btn !bg-red-500 !border-red-500 mt-1"
+                  >
+                    Reject
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col">
-              <button className="my_btn">Info</button>
-              <button className="my_btn mt-1">Members</button>
-            </div>
-          </div>
-        ))}
+            ))
+          : mygrouplist.map((item) => (
+              <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+                <div className="flex items-center gap-2">
+                  <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                    <picture>
+                      <img
+                        className="bg-primary text-white h-full w-full"
+                        src="images/profile.png"
+                        alt="Profile"
+                      />
+                    </picture>
+                  </div>
+
+                  <div>
+                    <h3 className="font-pop text-lg text-black font-semibold">
+                      {item.groupName}
+                    </h3>
+                    <p className="font-pop text-sm text-gray font-medium">
+                      {item.groupTagline}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <button
+                    onClick={() => handleGroupJoinRequestShow(item)}
+                    className="my_btn"
+                  >
+                    Info
+                  </button>
+                  <button
+                    onClick={() => handleMember(item)}
+                    className="my_btn mt-1"
+                  >
+                    Members
+                  </button>
+                </div>
+              </div>
+            ))}
       </SimpleBar>
     </div>
   );

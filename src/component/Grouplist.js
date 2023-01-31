@@ -75,7 +75,9 @@ const Grouplist = () => {
         adminName: auth.currentUser.displayName,
         adminId: auth.currentUser.uid,
       }).then(() => {
-        toast("Done! Group successfully created.");
+        toast("Done! Group successfully created.", {
+          autoClose: 1500,
+        });
         setCreateGroup(false);
         setLoading(false);
         setGroupName("");
@@ -92,12 +94,25 @@ const Grouplist = () => {
       let arr = [];
       snapshot.forEach((item) => {
         if (item.val().adminId != auth.currentUser.uid) {
-          arr.push(item.val());
+          arr.push({ ...item.val(), groupId: item.key });
         }
       });
       setGroupList(arr);
     });
   }, []);
+
+  //handle Group Join
+  let handleGroupJoin = (item) => {
+    set(push(ref(db, "groupJoinRequest")), {
+      adminId: item.adminId,
+      groupId: item.groupId,
+      groupName: item.groupName,
+      groupTagline: item.groupTagline,
+      userId: auth.currentUser.uid,
+      userName: auth.currentUser.displayName,
+      userPhoto: auth.currentUser.photoURL,
+    });
+  };
 
   return (
     <section>
@@ -181,13 +196,15 @@ const Grouplist = () => {
             grouplist.map((item) => (
               <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
                 <div className="flex items-center gap-2">
-                  <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
-                    <img
-                      className="bg-primary text-white"
-                      src="images/profile.png"
-                      alt="Profile"
-                    />
-                  </picture>
+                  <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                    <picture>
+                      <img
+                        className="bg-primary text-white h-full w-full"
+                        src="images/profile.png"
+                        alt="Profile"
+                      />
+                    </picture>
+                  </div>
                   <div>
                     <h3 className="font-pop text-lg text-black font-semibold">
                       {item.groupName}
@@ -202,7 +219,12 @@ const Grouplist = () => {
                   </div>
                 </div>
                 <div>
-                  <button className="my_btn">Join</button>
+                  <button
+                    onClick={() => handleGroupJoin(item)}
+                    className="my_btn"
+                  >
+                    Join
+                  </button>
                 </div>
               </div>
             ))

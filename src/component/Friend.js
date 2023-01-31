@@ -20,7 +20,7 @@ const Friend = ({ marginT }) => {
   //friend request
   let [friends, setFriends] = useState([]);
 
-  //friend request
+  //friend
   useEffect(() => {
     const usersRef = ref(db, "friends");
     onValue(usersRef, (snapshot) => {
@@ -65,21 +65,21 @@ const Friend = ({ marginT }) => {
     >
       <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
         <h2 className="font-pop font-semibold text-xl text-black">Friends</h2>
-        <a href="#">
-          <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
-        </a>
+        <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
       </div>
       <SimpleBar className="h-[385px] px-4 pt-5">
         {friends.map((item) => (
           <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
             <div className="flex items-center gap-2">
-              <picture className="w-[70px] h-[70px] rounded-full overflow-hidden">
-                <img
-                  className="bg-primary text-white"
-                  src="images/profile.png"
-                  alt="Profile"
-                />
-              </picture>
+              <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                <picture>
+                  <img
+                    className="bg-primary text-white h-full w-full"
+                    src={item.photoURL}
+                    alt="Profile"
+                  />
+                </picture>
+              </div>
               <div>
                 <h3 className="font-pop text-lg text-black font-semibold">
                   {auth.currentUser.uid == item.senderId ? (

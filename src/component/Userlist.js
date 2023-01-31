@@ -16,6 +16,8 @@ const Userlist = () => {
   let [friendrequest, setFriendRequest] = useState([]);
   //friends list
   let [friendlist, setFriendList] = useState([]);
+  //block list
+  let [blocklist, setBlockList] = useState([]);
 
   useEffect(() => {
     const usersRef = ref(db, "users/");
@@ -43,11 +45,11 @@ const Userlist = () => {
   useEffect(() => {
     const friendRequestRef = ref(db, "friendrequest/");
     onValue(friendRequestRef, (snapshot) => {
-      let friendRequestArr = [];
+      let arr = [];
       snapshot.forEach((item) => {
-        friendRequestArr.push(item.val().receiverId + item.val().senderId);
+        arr.push(item.val().receiverId + item.val().senderId);
       });
-      setFriendRequest(friendRequestArr);
+      setFriendRequest(arr);
     });
   }, []);
 
@@ -55,11 +57,23 @@ const Userlist = () => {
   useEffect(() => {
     const friendRequestRef = ref(db, "friends");
     onValue(friendRequestRef, (snapshot) => {
-      let friendRequestArr = [];
+      let arr = [];
       snapshot.forEach((item) => {
-        friendRequestArr.push(item.val().receiverid + item.val().senderid);
+        arr.push(item.val().receiverId + item.val().senderId);
       });
-      setFriendList(friendRequestArr);
+      setFriendList(arr);
+    });
+  }, []);
+
+  //block user
+  useEffect(() => {
+    const usersRef = ref(db, "blockusers");
+    onValue(usersRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().blockId + item.val().blockById);
+      });
+      setBlockList(arr);
     });
   }, []);
 
@@ -67,9 +81,7 @@ const Userlist = () => {
     <div className="mt-10 lg:mt-11 xl:mt-0 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
       <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
         <h2 className="font-pop font-semibold text-xl text-black">User List</h2>
-        <a href="#">
-          <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
-        </a>
+        <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
       </div>
       <SimpleBar className="h-[385px] px-4 pt-5">
         {userslist.map((item) => (
@@ -94,6 +106,9 @@ const Userlist = () => {
               {friendlist.includes(item.id + auth.currentUser.uid) ||
               friendlist.includes(auth.currentUser.uid + item.id) ? (
                 <button className="my_btn">Friend</button>
+              ) : blocklist.includes(item.id + auth.currentUser.uid) ||
+                blocklist.includes(auth.currentUser.uid + item.id) ? (
+                <button className="my_btn">Blocked</button>
               ) : friendrequest.includes(item.id + auth.currentUser.uid) ||
                 friendrequest.includes(auth.currentUser.uid + item.id) ? (
                 <button className="my_btn">Pending</button>
