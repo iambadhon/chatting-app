@@ -229,8 +229,10 @@ const LogIn = () => {
               <div className="relative">
                 <input
                   className={`w-full text-durkblue border-b-2 border-solid py-3 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
-                    emailerr ? "border-red-500" : "border-gray/25"
-                  } ${firebaseemailerr ? "border-red-500" : "border-gray/25"}`}
+                    emailerr || firebaseemailerr
+                      ? "border-red-500"
+                      : "border-gray/25"
+                  }`}
                   type="email"
                   placeholder="email"
                   onChange={handleEmail}
@@ -252,8 +254,10 @@ const LogIn = () => {
               <div className="relative mt-14 sml:mt-10 md:!mt-14">
                 <input
                   className={`w-full text-durkblue border-b-2 border-solid py-3 pr-11 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
-                    passworderr ? "border-red-500" : "border-gray/25"
-                  } ${firebasepasserr ? "border-red-500" : "border-gray/25"}`}
+                    passworderr || firebasepasserr
+                      ? "border-red-500"
+                      : "border-gray/25"
+                  }`}
                   type={passwordshow ? "text" : "password"}
                   placeholder="password"
                   onChange={handlePassword}
@@ -374,8 +378,8 @@ const LogIn = () => {
               {forgotloading ? (
                 <div className="inline-block">
                   <ThreeDots
-                    height="50"
-                    width="100"
+                    height="60"
+                    width="150"
                     radius="9"
                     color="#5F35F5"
                     ariaLabel="three-dots-loading"
@@ -392,13 +396,15 @@ const LogIn = () => {
                 </button>
               )}
 
-              <button
-                className="my_btn !text-base md:!text-xl !rounded-md !p-3 md:!p-4 !font-nunito after:hover:!bg-lightwhite !bg-red-500 !border-red-500"
-                type="button"
-                onClick={() => setForgotPassShow(false)}
-              >
-                Cancel
-              </button>
+              {!forgotloading && (
+                <button
+                  className="my_btn !text-base md:!text-xl !rounded-md !p-3 md:!p-4 !font-nunito after:hover:!bg-lightwhite !bg-red-500 !border-red-500"
+                  type="button"
+                  onClick={() => setForgotPassShow(false)}
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
         </div>

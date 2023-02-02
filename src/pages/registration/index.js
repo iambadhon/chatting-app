@@ -227,8 +227,10 @@ const Registration = () => {
               <div className="relative">
                 <input
                   className={`w-full text-durkblue border-2 border-solid rounded-lg py-6 sml:py-3.5 md:!py-6 px-8 sml:px-5 md:!px-8 font-nunito text-xl focus:border-primary outline-none placeholder-transparent peer ${
-                    emailerr ? "border-red-500" : "border-gray/25"
-                  }  ${firebaseerr ? "border-red-500" : "border-gray/25"}`}
+                    emailerr || firebaseerr
+                      ? "border-red-500"
+                      : "border-gray/25"
+                  }`}
                   type="email"
                   placeholder="email"
                   onChange={handleEmail}

@@ -80,8 +80,17 @@ const Mygroup = ({ marginT, hight }) => {
   };
 
   //handle Member
-  let handleMember = () => {
-    console.log("member");
+  let handleMember = (id) => {
+    console.log(id);
+    const groupMembersRef = ref(db, "groupMembers");
+    onValue(groupMembersRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        if (id.groupId === item.val().groupId) {
+          console.log("glist", item.val());
+        }
+      });
+    });
   };
 
   return (

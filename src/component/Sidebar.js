@@ -94,7 +94,9 @@ const Sidebar = ({ active }) => {
               .then(() => {
                 setLoading(false);
                 setUploadImageShow(false);
-                toast("Profile Photo Update Successfull.");
+                toast("Profile Photo Update Successfull.", {
+                  autoClose: 1500,
+                });
                 setImg("");
                 setPreviewImg("");
               })
@@ -267,7 +269,7 @@ const Sidebar = ({ active }) => {
                   <div className="flex justify-center items-center sml:h-14 md:!h-full">
                     <ThreeDots
                       height="60"
-                      width="171"
+                      width="150"
                       radius="9"
                       color="#5F35F5"
                       ariaLabel="three-dots-loading"
@@ -284,13 +286,15 @@ const Sidebar = ({ active }) => {
                   </button>
                 )}
 
-                <button
-                  className="my_btn !text-base md:!text-xl !rounded-md !p-3 md:!p-4 !font-nunito after:hover:!bg-lightwhite !bg-red-500 !border-red-500"
-                  type="button"
-                  onClick={handleUploadCancel}
-                >
-                  Cancel
-                </button>
+                {!loading && (
+                  <button
+                    className="my_btn !text-base md:!text-xl !rounded-md !p-3 md:!p-4 !font-nunito after:hover:!bg-lightwhite !bg-red-500 !border-red-500"
+                    type="button"
+                    onClick={handleUploadCancel}
+                  >
+                    Cancel
+                  </button>
+                )}
               </div>
             </div>
           </div>
