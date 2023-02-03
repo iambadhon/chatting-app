@@ -109,12 +109,12 @@ const Userlist = () => {
               {friendlist.includes(item.id + auth.currentUser.uid) ||
               friendlist.includes(auth.currentUser.uid + item.id) ? (
                 <button className="my_btn">Friend</button>
-              ) : blocklist.includes(item.id + auth.currentUser.uid) ||
-                blocklist.includes(auth.currentUser.uid + item.id) ? (
-                <button className="my_btn">Blocked</button>
               ) : friendrequest.includes(item.id + auth.currentUser.uid) ||
                 friendrequest.includes(auth.currentUser.uid + item.id) ? (
                 <button className="my_btn">Pending</button>
+              ) : blocklist.includes(item.id + auth.currentUser.uid) ||
+                blocklist.includes(auth.currentUser.uid + item.id) ? (
+                <button className="my_btn">Blocked</button>
               ) : (
                 <button
                   onClick={() => handleFriendRequest(item)}

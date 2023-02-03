@@ -81,17 +81,31 @@ const Mygroup = ({ marginT, hight }) => {
 
   //handle Member
   let handleMember = (id) => {
-    console.log(id);
-    const groupMembersRef = ref(db, "groupMembers");
-    onValue(groupMembersRef, (snapshot) => {
+    // setShowList(true);
+    const gmemberRef = ref(db, "groupMembers");
+    onValue(gmemberRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (id.groupId === item.val().groupId) {
-          console.log("glist", item.val());
+        if (id.groupId == item.val().groupId) {
+          console.log(item.val());
         }
+        // setMemberlist(arr);
       });
     });
   };
+
+  // let handleMember = (id) => {
+  //   console.log(id);
+  //   const groupMembersRef = ref(db, "groupMembers");
+  //   onValue(groupMembersRef, (snapshot) => {
+  //     let arr = [];
+  //     snapshot.forEach((item) => {
+  //       if (id.groupId === item.val().groupId) {
+  //         console.log("glist", item.val());
+  //       }
+  //     });
+  //   });
+  // };
 
   return (
     <div
