@@ -19,10 +19,14 @@ const Mygroup = ({ marginT, hight }) => {
   const db = getDatabase();
   //my group list
   let [mygrouplist, setMyGroupList] = useState([]);
+  //member list
+  let [memberlist, setMemberList] = useState([]);
   //group join request
   let [memberjoinrequest, setMemberJoinRequest] = useState([]);
   //show info
   let [showinfo, setShowInfo] = useState(false);
+  //show member
+  let [showmember, setShowMember] = useState(false);
 
   useEffect(() => {
     const groupsRef = ref(db, "groups");
@@ -43,12 +47,12 @@ const Mygroup = ({ marginT, hight }) => {
     const groupJoinRequestRef = ref(db, "groupJoinRequest");
     onValue(groupJoinRequestRef, (snapshot) => {
       let arr = [];
-      snapshot.forEach((groupitem) => {
+      snapshot.forEach((groupItem) => {
         if (
           item.adminId == auth.currentUser.uid &&
-          item.groupId == groupitem.val().groupId
+          item.groupId == groupItem.val().groupId
         ) {
-          arr.push({ ...groupitem.val(), groupId: groupitem.key });
+          arr.push({ ...groupItem.val(), groupKey: groupItem.key });
         }
       });
       setMemberJoinRequest(arr);
@@ -57,7 +61,6 @@ const Mygroup = ({ marginT, hight }) => {
 
   //handle Member Request Accept
   let handleMemberRequestAccept = (item) => {
-    console.log(item);
     set(push(ref(db, "groupMembers")), {
       adminId: item.adminId,
       groupId: item.groupId,
@@ -66,46 +69,39 @@ const Mygroup = ({ marginT, hight }) => {
       userId: item.userId,
       userName: item.userName,
       userPhoto: item.userPhoto,
+      groupKey: item.groupKey,
       date: `${new Date().getDate()}/${
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,
     }).then(() => {
-      remove(ref(db, "groupJoinRequest/" + item.groupId));
+      remove(ref(db, "groupJoinRequest/" + item.groupKey));
     });
   };
 
   //handle Member Request Reject
   let handleMemberRequestReject = (item) => {
-    remove(ref(db, "groupJoinRequest/" + item.groupId));
+    remove(ref(db, "groupJoinRequest/" + item.groupKey));
   };
 
   //handle Member
-  let handleMember = (id) => {
-    // setShowList(true);
-    const gmemberRef = ref(db, "groupMembers");
-    onValue(gmemberRef, (snapshot) => {
+  let handleMember = (item) => {
+    setShowMember(true);
+    const groupMembersRef = ref(db, "groupMembers");
+    onValue(groupMembersRef, (snapshot) => {
       let arr = [];
-      snapshot.forEach((item) => {
-        if (id.groupId == item.val().groupId) {
-          console.log(item.val());
+      snapshot.forEach((memberItem) => {
+        if (item.groupId == memberItem.val().groupId) {
+          arr.push({ ...memberItem.val(), groupId: memberItem.key });
         }
-        // setMemberlist(arr);
       });
+      setMemberList(arr);
     });
   };
 
-  // let handleMember = (id) => {
-  //   console.log(id);
-  //   const groupMembersRef = ref(db, "groupMembers");
-  //   onValue(groupMembersRef, (snapshot) => {
-  //     let arr = [];
-  //     snapshot.forEach((item) => {
-  //       if (id.groupId === item.val().groupId) {
-  //         console.log("glist", item.val());
-  //       }
-  //     });
-  //   });
-  // };
+  //handle Member Remove
+  let handleMemberRemove = (item) => {
+    remove(ref(db, "groupMembers/" + item.groupId));
+  };
 
   return (
     <div
@@ -116,6 +112,10 @@ const Mygroup = ({ marginT, hight }) => {
         <h2 className="font-pop font-semibold text-xl text-black">My Groups</h2>
         {showinfo ? (
           <button onClick={() => setShowInfo(false)} className="my_btn">
+            Go Back
+          </button>
+        ) : showmember ? (
+          <button onClick={() => setShowMember(false)} className="my_btn">
             Go Back
           </button>
         ) : (
@@ -157,6 +157,38 @@ const Mygroup = ({ marginT, hight }) => {
                     className="my_btn !bg-red-500 !border-red-500 mt-1"
                   >
                     Reject
+                  </button>
+                </div>
+              </div>
+            ))
+          : showmember
+          ? memberlist.map((item) => (
+              <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+                <div className="flex items-center gap-2">
+                  <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                    <picture>
+                      <img
+                        className="bg-primary text-white h-full w-full"
+                        src={item.userPhoto}
+                        alt="Profile"
+                      />
+                    </picture>
+                  </div>
+                  <div>
+                    <h3 className="font-pop text-lg text-black font-semibold">
+                      {item.userName}
+                    </h3>
+                    <p className="font-pop text-sm text-gray font-medium">
+                      {item.date}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    onClick={() => handleMemberRemove(item)}
+                    className="my_btn !bg-red-500 !border-red-500 mt-1"
+                  >
+                    Remove
                   </button>
                 </div>
               </div>

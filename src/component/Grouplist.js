@@ -30,6 +30,10 @@ const Grouplist = () => {
   let [loading, setLoading] = useState(false);
   //group list
   let [grouplist, setGroupList] = useState([]);
+  //member join request
+  let [groupjoinrequest, setgroupJoinRequest] = useState([]);
+  //member list
+  let [memberlist, setMemberList] = useState([]);
 
   // handle Group Name
   let handleGroupName = (e) => {
@@ -116,6 +120,30 @@ const Grouplist = () => {
       }/${new Date().getFullYear()}`,
     });
   };
+
+  //group Join Request
+  useEffect(() => {
+    const groupJoinRequestRef = ref(db, "groupJoinRequest");
+    onValue(groupJoinRequestRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().groupId + item.val().userId);
+      });
+      setgroupJoinRequest(arr);
+    });
+  }, []);
+
+  //Member List
+  useEffect(() => {
+    const groupMembersRef = ref(db, "groupMembers");
+    onValue(groupMembersRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().groupId + item.val().userId);
+      });
+      setMemberList(arr);
+    });
+  }, []);
 
   return (
     <section>
@@ -222,12 +250,24 @@ const Grouplist = () => {
                   </div>
                 </div>
                 <div>
-                  <button
-                    onClick={() => handleGroupJoin(item)}
-                    className="my_btn"
-                  >
-                    Join
-                  </button>
+                  {memberlist.includes(item.groupId + auth.currentUser.uid) ||
+                  memberlist.includes(auth.currentUser.uid + item.groupId) ? (
+                    <button className="my_btn">Joined</button>
+                  ) : groupjoinrequest.includes(
+                      item.groupId + auth.currentUser.uid
+                    ) ||
+                    groupjoinrequest.includes(
+                      auth.currentUser.uid + item.groupId
+                    ) ? (
+                    <button className="my_btn">Pending</button>
+                  ) : (
+                    <button
+                      onClick={() => handleGroupJoin(item)}
+                      className="my_btn"
+                    >
+                      Join
+                    </button>
+                  )}
                 </div>
               </div>
             ))

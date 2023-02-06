@@ -22,7 +22,7 @@ const Friendrequest = () => {
 
   //friend request
   useEffect(() => {
-    const friendRequestRef = ref(db, "friendRequest/");
+    const friendRequestRef = ref(db, "friendRequest");
     onValue(friendRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {

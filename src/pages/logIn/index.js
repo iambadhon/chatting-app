@@ -141,12 +141,6 @@ const LogIn = () => {
     });
   };
 
-  // let handleGoogleLogin = () => {
-  //   signInWithPopup(auth, provider).then(() => {
-  //     navigate("/");
-  //   });
-  // };
-
   //handle Forgot Email
   let handleForgotEmail = (e) => {
     setForgotEmail(e.target.value);

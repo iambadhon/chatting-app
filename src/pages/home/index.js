@@ -7,7 +7,7 @@ import Mygroup from "../../component/Mygroup";
 import Search from "../../component/Search";
 import Sidebar from "../../component/Sidebar";
 import Userlist from "../../component/Userlist";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -21,6 +21,7 @@ const Home = () => {
   //redirection
   let navigate = useNavigate();
 
+  //email varify
   useEffect(() => {
     if (!auth.currentUser) {
       navigate("/login");
@@ -30,6 +31,13 @@ const Home = () => {
       }
     }
   }, []);
+
+  //handle sign out
+  let handleSignOut = () => {
+    signOut(auth).then(() => {
+      navigate("/login");
+    });
+  };
 
   return (
     <>
@@ -56,9 +64,17 @@ const Home = () => {
         </div>
       ) : (
         <div className="text-center mt-14 px-2">
-          <h2 className="bg-primary p-3 sml:p-4 md:!p-6 text-lg sml:text-2xl md:!text-4xl font-bold text-white font-nunito rounded-lg inline-block">
-            Sorry! First Varify Your Email Address.
-          </h2>
+          <div className="bg-primary p-3 sml:p-4 md:!p-6 inline-block rounded-lg">
+            <h2 className=" text-xl sml:text-2xl md:!text-4xl font-bold text-white font-nunito">
+              Sorry! First Varify Your Email Address.
+            </h2>
+            <button
+              onClick={handleSignOut}
+              className="my_btn !bg-red-500 !border-red-500 after:!bg-primary hover:!text-white  !px-3 !py-1 md:!px-5 md:!py-1.5 mt-6"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       )}
     </>
