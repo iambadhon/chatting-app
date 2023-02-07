@@ -131,6 +131,9 @@ const LogIn = () => {
         name: user.user.displayName,
         email: user.user.email,
         photoURL: user.user.photoURL,
+        date: `${new Date().getDate()}/${
+          new Date().getMonth() + 1
+        }/${new Date().getFullYear()}`,
       })
         .then(() => {
           navigate("/");

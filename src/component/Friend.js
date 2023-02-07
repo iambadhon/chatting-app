@@ -58,6 +58,11 @@ const Friend = ({ marginT }) => {
         });
   };
 
+  //handle Unfriend
+  let handleUnfriend = (item) => {
+    remove(ref(db, "friends/" + item.id));
+  };
+
   return (
     <div
       style={{ marginTop: `${marginT}` }}
@@ -93,9 +98,15 @@ const Friend = ({ marginT }) => {
                 </p>
               </div>
             </div>
-            <div>
+            <div className="flex flex-col ">
               <button onClick={() => handleBlock(item)} className="my_btn">
                 Block
+              </button>
+              <button
+                onClick={() => handleUnfriend(item)}
+                className="my_btn !bg-red-500 !border-red-500 mt-1"
+              >
+                Unfriend
               </button>
             </div>
           </div>

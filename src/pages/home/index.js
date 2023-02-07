@@ -15,7 +15,7 @@ import { useState } from "react";
 const Home = () => {
   //Authentication
   const auth = getAuth();
-  //emailVerified
+  //email Verified
   let [emailvarify, setEmailVarify] = useState(false);
 
   //redirection

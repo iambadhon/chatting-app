@@ -103,6 +103,9 @@ const Userlist = () => {
                 <h3 className="font-pop text-lg text-black font-semibold">
                   {item.name}
                 </h3>
+                <p className="font-pop text-sm text-gray font-medium">
+                  {item.date}
+                </p>
               </div>
             </div>
             <div>

@@ -50,6 +50,11 @@ const Friendrequest = () => {
     });
   };
 
+  //handle Reject Friend Request
+  let handleRejectFriendRequest = (item) => {
+    remove(ref(db, "friendRequest/" + item.id));
+  };
+
   return (
     <div className="mt-10 lg:mt-11 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
       <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
@@ -80,12 +85,18 @@ const Friendrequest = () => {
                 </p>
               </div>
             </div>
-            <div>
+            <div className="flex flex-col">
               <button
                 onClick={() => handleAccecptFriendRequest(item)}
                 className="my_btn"
               >
-                Accecpt
+                Accept
+              </button>
+              <button
+                onClick={() => handleRejectFriendRequest(item)}
+                className="my_btn !bg-red-500 !border-red-500 mt-1"
+              >
+                Reject
               </button>
             </div>
           </div>

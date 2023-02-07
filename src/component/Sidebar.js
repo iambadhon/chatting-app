@@ -4,7 +4,7 @@ import { BiMessageDetail } from "react-icons/bi";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { TbSettings } from "react-icons/tb";
 import { ImCamera } from "react-icons/im";
-import { MdLogout } from "react-icons/md";
+import { GoSignOut } from "react-icons/go";
 import { Link, useNavigate } from "react-router-dom";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
@@ -207,7 +207,7 @@ const Sidebar = ({ active }) => {
             </Link>
           </div>
           <div className="sml:ml-10 md:!ml-16 lg:!ml-0 lg:mt-[105px] xl:mt-24 lg:mb-3.5">
-            <MdLogout
+            <GoSignOut
               onClick={handleSignOut}
               className="text-[32px] sml:text-4xl md:!text-5xl text-white cursor-pointer"
             />
