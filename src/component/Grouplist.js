@@ -3,14 +3,7 @@ import { useState, useEffect } from "react";
 import SimpleBar from "simplebar-react";
 import { ThreeDots } from "react-loader-spinner";
 import { ToastContainer, toast } from "react-toastify";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  set,
-  push,
-  remove,
-} from "firebase/database";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 const Grouplist = () => {
@@ -109,6 +102,7 @@ const Grouplist = () => {
   let handleGroupJoin = (item) => {
     set(push(ref(db, "groupJoinRequest")), {
       adminId: item.adminId,
+      adminName: item.adminName,
       groupId: item.groupId,
       groupName: item.groupName,
       groupTagline: item.groupTagline,

@@ -12,7 +12,7 @@ import {
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
-const Mygroup = ({ marginT, hight }) => {
+const Mygroup = () => {
   //Authentication
   const auth = getAuth();
   //data base
@@ -63,6 +63,7 @@ const Mygroup = ({ marginT, hight }) => {
   let handleMemberRequestAccept = (item) => {
     set(push(ref(db, "groupMembers")), {
       adminId: item.adminId,
+      adminName: item.adminName,
       groupId: item.groupId,
       groupName: item.groupName,
       groupTagline: item.groupTagline,
@@ -104,10 +105,7 @@ const Mygroup = ({ marginT, hight }) => {
   };
 
   return (
-    <div
-      style={{ marginTop: `${marginT}` }}
-      className="mt-10 lg:mt-11 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden"
-    >
+    <div className="mt-10 lg:mt-11 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
       <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
         <h2 className="font-pop font-semibold text-xl text-black">My Groups</h2>
         {showinfo ? (
@@ -122,7 +120,7 @@ const Mygroup = ({ marginT, hight }) => {
           <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
         )}
       </div>
-      <SimpleBar style={{ height: `${hight}` }} className="h-[380px] px-4 pt-5">
+      <SimpleBar className="h-[380px] px-4 pt-5">
         {showinfo
           ? memberjoinrequest.map((item) => (
               <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">

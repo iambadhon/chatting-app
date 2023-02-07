@@ -1,7 +1,7 @@
 import React from "react";
 import Friend from "../../component/Friend";
+import Joinedgrouplist from "../../component/Joinedgrouplist";
 import Messagefield from "../../component/Messagefield";
-import Mygroup from "../../component/Mygroup";
 import Search from "../../component/Search";
 import Sidebar from "../../component/Sidebar";
 
@@ -13,8 +13,8 @@ const Message = () => {
       </div>
       <div className="w-full lg:w-[426px]">
         <Search />
-        <Mygroup marginT="40px" hight="280px" />
-        <Friend marginT="44px" />
+        <Joinedgrouplist />
+        <Friend marginT="37px" />
       </div>
       <div className="w-full lg:w-[690px]">
         <Messagefield />
