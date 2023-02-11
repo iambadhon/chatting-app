@@ -1,11 +1,11 @@
 import React from "react";
-import { BiDotsVerticalRounded } from "react-icons/bi";
+import { BiDotsVerticalRounded, BiMessageDetail } from "react-icons/bi";
 import SimpleBar from "simplebar-react";
 import { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
-const Joinedgrouplist = () => {
+const Joinedgrouplist = ({ marginB }) => {
   //Authentication
   const auth = getAuth();
   //data base
@@ -44,7 +44,10 @@ const Joinedgrouplist = () => {
   }, []);
 
   return (
-    <div className="mt-10 lg:mt-11 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
+    <div
+      style={{ marginBottom: `${marginB}` }}
+      className="mt-10 lg:mt-11 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden"
+    >
       <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
         <h2 className="font-pop font-semibold text-xl text-black">
           Joined Groups
@@ -78,7 +81,9 @@ const Joinedgrouplist = () => {
               </div>
             </div>
             <div>
-              <button className="my_btn">Info</button>
+              <button className="my_btn !py-1 !px-2">
+                <BiMessageDetail className="text-3xl" />
+              </button>
             </div>
           </div>
         ))}
@@ -108,7 +113,9 @@ const Joinedgrouplist = () => {
               </div>
             </div>
             <div>
-              <button className="my_btn">Info</button>
+              <button className="my_btn !py-1 !px-2">
+                <BiMessageDetail className="text-3xl" />
+              </button>
             </div>
           </div>
         ))}

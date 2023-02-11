@@ -53,7 +53,7 @@ const Home = () => {
               <Friendrequest />
             </div>
             <div className="w-full lg:w-[48%] xl:w-[30%]">
-              <Friend />
+              <Friend block="true" />
               <Mygroup />
             </div>
             <div className="w-full xl:w-[30%] grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 lg:gap-x-8 xl:gap-x-0 ">

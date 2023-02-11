@@ -1,5 +1,5 @@
 import React from "react";
-import { BiDotsVerticalRounded } from "react-icons/bi";
+import { BiDotsVerticalRounded, BiMessageDetail } from "react-icons/bi";
 import SimpleBar from "simplebar-react";
 import { useEffect, useState } from "react";
 import {
@@ -12,7 +12,7 @@ import {
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
-const Friend = ({ marginT }) => {
+const Friend = (buttonProps) => {
   //Authentication
   const auth = getAuth();
   //data base
@@ -64,10 +64,7 @@ const Friend = ({ marginT }) => {
   };
 
   return (
-    <div
-      style={{ marginTop: `${marginT}` }}
-      className="mt-10 lg:mt-0 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden"
-    >
+    <div className="mt-10 lg:mt-0 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
       <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
         <h2 className="font-pop font-semibold text-xl text-black">Friends</h2>
         <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
@@ -99,15 +96,23 @@ const Friend = ({ marginT }) => {
               </div>
             </div>
             <div className="flex flex-col ">
-              <button onClick={() => handleBlock(item)} className="my_btn">
-                Block
-              </button>
-              <button
-                onClick={() => handleUnfriend(item)}
-                className="my_btn !bg-red-500 !border-red-500 mt-1"
-              >
-                Unfriend
-              </button>
+              {buttonProps.block ? (
+                <>
+                  <button onClick={() => handleBlock(item)} className="my_btn">
+                    Block
+                  </button>
+                  <button
+                    onClick={() => handleUnfriend(item)}
+                    className="my_btn !bg-red-500 !border-red-500 mt-1"
+                  >
+                    Unfriend
+                  </button>
+                </>
+              ) : (
+                <button className="my_btn !py-1 !px-2">
+                  <BiMessageDetail className="text-3xl" />
+                </button>
+              )}
             </div>
           </div>
         ))}
