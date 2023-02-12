@@ -4,12 +4,16 @@ import SimpleBar from "simplebar-react";
 import { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { activeChat } from "../slices/activeChat";
 
-const Joinedgrouplist = ({ marginB }) => {
+const Joinedgrouplist = () => {
   //Authentication
   const auth = getAuth();
   //data base
   const db = getDatabase();
+  //react redux
+  let dispatch = useDispatch();
   //my group list
   let [mygrouplist, setMyGroupList] = useState([]);
   //joined group list
@@ -22,7 +26,7 @@ const Joinedgrouplist = ({ marginB }) => {
       let arr = [];
       snapshot.forEach((item) => {
         if (item.val().adminId == auth.currentUser.uid) {
-          arr.push(item.val());
+          arr.push({ ...item.val(), groupId: item.key });
         }
       });
       setMyGroupList(arr);
@@ -43,11 +47,19 @@ const Joinedgrouplist = ({ marginB }) => {
     });
   }, []);
 
+  //handle Active Chat
+  let handleActiveChat = (item) => {
+    let userInfo = {
+      status: "group",
+      name: item.groupName,
+      groupId: item.groupId,
+    };
+
+    dispatch(activeChat(userInfo));
+  };
+
   return (
-    <div
-      style={{ marginBottom: `${marginB}` }}
-      className="mt-10 lg:mt-11 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden"
-    >
+    <div className="mt-10 lg:mt-11 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
       <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
         <h2 className="font-pop font-semibold text-xl text-black">
           Joined Groups
@@ -56,7 +68,10 @@ const Joinedgrouplist = ({ marginB }) => {
       </div>
       <SimpleBar className="h-[283px] px-4 pt-5">
         {mygrouplist.map((item) => (
-          <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+          <div
+            onClick={() => handleActiveChat(item)}
+            className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0 cursor-pointer"
+          >
             <div className="flex items-center gap-2">
               <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
                 <picture>
@@ -88,7 +103,10 @@ const Joinedgrouplist = ({ marginB }) => {
           </div>
         ))}
         {joinedgrouplist.map((item) => (
-          <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+          <div
+            onClick={() => handleActiveChat(item)}
+            className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0 cursor-pointer"
+          >
             <div className="flex items-center gap-2">
               <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
                 <picture>

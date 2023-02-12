@@ -4,8 +4,12 @@ import { RiSendPlaneFill } from "react-icons/ri";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { FaRegSmile } from "react-icons/fa";
 import ScrollToBottom from "react-scroll-to-bottom";
+import { useSelector } from "react-redux";
 
 const Messagefield = () => {
+  //data
+  let data = useSelector((state) => state.activeChat.value);
+
   return (
     <div className="mt-10 lg:mt-0 pt-6 pb-8 mb-20 md:mb-24 lg:mb-0 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
       <div className="flex items-center justify-between border-b-2 border-solid border-gray pb-4 mx-4 md:mx-8">
@@ -15,7 +19,7 @@ const Messagefield = () => {
           </picture>
           <div>
             <h3 className="font-pop text-lg text-black font-semibold">
-              Swathi
+              {data.name}
             </h3>
             <p className="font-pop text-sm text-gray font-medium">Online</p>
           </div>

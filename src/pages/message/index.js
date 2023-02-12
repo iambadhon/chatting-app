@@ -13,8 +13,8 @@ const Message = () => {
       </div>
       <div className="w-full lg:w-[426px]">
         <Search />
-        <Joinedgrouplist marginB="37px" />
-        <Friend />
+        <Joinedgrouplist />
+        <Friend marginT="37px" />
       </div>
       <div className="w-full lg:w-[690px]">
         <Messagefield />
