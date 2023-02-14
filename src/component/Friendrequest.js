@@ -40,8 +40,10 @@ const Friendrequest = () => {
       id: item.id,
       senderName: item.senderName,
       senderId: item.senderId,
+      senderPhoto: item.senderPhoto,
       receiverName: item.receiverName,
       receiverId: item.receiverId,
+      receiverPhoto: item.receiverPhoto,
       date: `${new Date().getDate()}/${
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,
@@ -71,7 +73,7 @@ const Friendrequest = () => {
                 <picture>
                   <img
                     className="bg-primary text-white h-full w-full"
-                    src={item.photoURL}
+                    src={item.senderPhoto}
                     alt="Profile"
                   />
                 </picture>

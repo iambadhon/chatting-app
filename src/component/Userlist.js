@@ -37,8 +37,10 @@ const Userlist = () => {
     set(push(ref(db, "friendRequest")), {
       senderName: auth.currentUser.displayName,
       senderId: auth.currentUser.uid,
+      senderPhoto: auth.currentUser.photoURL,
       receiverName: item.name,
       receiverId: item.id,
+      receiverPhoto: item.photoURL,
       date: `${new Date().getDate()}/${
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,

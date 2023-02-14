@@ -47,16 +47,20 @@ const Friend = (props) => {
       ? set(push(ref(db, "blockUsers")), {
           block: item.receiverName,
           blockId: item.receiverId,
+          blockPhoto: item.receiverPhoto,
           blockBy: item.senderName,
           blockById: item.senderId,
+          blockByPhoto: item.senderPhoto,
         }).then(() => {
           remove(ref(db, "friends/" + item.id));
         })
       : set(push(ref(db, "blockUsers")), {
           block: item.senderName,
           blockId: item.senderId,
+          blockPhoto: item.senderPhoto,
           blockBy: item.receiverName,
           blockById: item.receiverId,
+          blockByPhoto: item.receiverPhoto,
         }).then(() => {
           remove(ref(db, "friends/" + item.id));
         });
@@ -102,7 +106,11 @@ const Friend = (props) => {
                 <picture>
                   <img
                     className="bg-primary text-white h-full w-full"
-                    src={item.photoURL}
+                    src={
+                      auth.currentUser.uid == item.senderId
+                        ? item.receiverPhoto
+                        : item.senderPhoto
+                    }
                     alt="Profile"
                   />
                 </picture>

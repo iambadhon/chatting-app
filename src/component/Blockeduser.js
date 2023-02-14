@@ -35,6 +35,7 @@ const Blockeduser = () => {
               id: item.key,
               block: item.val().block,
               blockId: item.val().blockId,
+              blockPhoto: item.val().blockPhoto,
               date: `${new Date().getDate()}/${
                 new Date().getMonth() + 1
               }/${new Date().getFullYear()}`,
@@ -44,6 +45,7 @@ const Blockeduser = () => {
               id: item.key,
               block: item.val().blockBy,
               blockById: item.val().blockById,
+              blockPhoto: item.val().blockByPhoto,
               date: `${new Date().getDate()}/${
                 new Date().getMonth() + 1
               }/${new Date().getFullYear()}`,
@@ -60,8 +62,10 @@ const Blockeduser = () => {
     set(push(ref(db, "friends")), {
       senderName: item.block,
       senderId: item.blockId,
+      senderPhoto: item.blockPhoto,
       receiverName: auth.currentUser.displayName,
       receiverId: auth.currentUser.uid,
+      receiverPhoto: auth.currentUser.photoURL,
       date: `${new Date().getDate()}/${
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,
@@ -86,7 +90,7 @@ const Blockeduser = () => {
                 <picture>
                   <img
                     className="bg-primary text-white h-full w-full"
-                    src={item.photoURL}
+                    src={item.blockPhoto}
                     alt="Profile"
                   />
                 </picture>

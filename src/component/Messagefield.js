@@ -15,8 +15,8 @@ const Messagefield = () => {
   const auth = getAuth();
   //data base
   const db = getDatabase();
-  //data
-  let data = useSelector((state) => state.activeChat.value);
+  //active Chat Data
+  let activeChatData = useSelector((state) => state.activeChat.value);
   //message
   let [message, setMessage] = useState("");
   //single message list
@@ -31,12 +31,12 @@ const Messagefield = () => {
 
   //handle Message Send
   let handleMessageSend = () => {
-    if (data.status == "group") {
+    if (activeChatData.status == "group") {
       set(push(ref(db, "groupMessage")), {
         whoSendId: auth.currentUser.uid,
         whoSendName: auth.currentUser.displayName,
-        whoReceiveName: data.name,
-        whoReceiveId: data.groupId,
+        whoReceiveName: activeChatData.name,
+        whoReceiveId: activeChatData.groupId,
         message: message,
         date: `${new Date().getFullYear()}/${
           new Date().getMonth() + 1
@@ -46,8 +46,8 @@ const Messagefield = () => {
       set(push(ref(db, "singleMessage")), {
         whoSendId: auth.currentUser.uid,
         whoSendName: auth.currentUser.displayName,
-        whoReceiveName: data.name,
-        whoReceiveId: data.id,
+        whoReceiveName: activeChatData.name,
+        whoReceiveId: activeChatData.id,
         message: message,
         date: `${new Date().getFullYear()}/${
           new Date().getMonth() + 1
@@ -64,16 +64,16 @@ const Messagefield = () => {
       snapshot.forEach((item) => {
         if (
           (item.val().whoSendId == auth.currentUser.uid &&
-            item.val().whoReceiveId == data.id) ||
+            item.val().whoReceiveId == activeChatData.id) ||
           (item.val().whoReceiveId == auth.currentUser.uid &&
-            item.val().whoSendId == data.id)
+            item.val().whoSendId == activeChatData.id)
         ) {
           arr.push(item.val());
         }
       });
       setSingleMessageList(arr);
     });
-  }, [data ? data.id : "ffgf"]);
+  }, [activeChatData]);
 
   //group Message List
   useEffect(() => {
@@ -81,18 +81,11 @@ const Messagefield = () => {
     onValue(groupMessageRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (
-          (item.val().whoSendId == auth.currentUser.uid &&
-            item.val().whoReceiveId == data.groupId) ||
-          (item.val().whoReceiveId == auth.currentUser.uid &&
-            item.val().whoSendId == data.groupId)
-        ) {
-          arr.push(item.val());
-        }
+        arr.push(item.val());
       });
       setGroupMessageList(arr);
     });
-  }, [data ? data.groupId : "ffgf"]);
+  }, [activeChatData]);
 
   return (
     <div className="mt-10 lg:mt-0 pt-6 pb-8 mb-20 md:mb-24 lg:mb-0 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
@@ -103,7 +96,9 @@ const Messagefield = () => {
           </picture>
           <div>
             <h3 className="font-pop text-lg text-black font-semibold">
-              {data ? data.name : "Select a Group or Friend"}
+              {activeChatData
+                ? activeChatData.name
+                : "Select a Group or Friend"}
             </h3>
             <p className="font-pop text-sm text-gray font-medium">Online</p>
           </div>
@@ -113,32 +108,36 @@ const Messagefield = () => {
         </div>
       </div>
       <ScrollToBottom className="pb-7 mx-4 md:mx-8 h-[741px]">
-        {/* group message */}
-        {data.status == "group"
+        {activeChatData.status == "group"
           ? groupmessagelist.map((item) =>
-              item.whoSendId == auth.currentUser.uid ? (
-                <div className="mt-5 flex justify-end">
-                  <div>
-                    <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
-                      {item.message}
-                    </p>
-                    <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
-                      {moment(item.date).calendar()}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-5">
-                  <p className="relative py-3 px-6 mr-10 md:mr-16 lg:mr-20 ml-3 bg-lightwhite text-black rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-5 after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
-                    {item.message}
-                  </p>
-                  <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
-                    {moment(item.date).calendar()}
-                  </p>
-                </div>
-              )
+              item.whoSendId == auth.currentUser.uid
+                ? item.whoReceiveId == activeChatData.groupId && (
+                    <div className="mt-5 flex justify-end">
+                      <div>
+                        <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                          {item.message}
+                        </p>
+                        <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
+                          {moment(item.date).calendar()}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                : item.whoReceiveId == activeChatData.groupId && (
+                    <div className="mt-5">
+                      <p className="font-pop font-medium text-gray text-sm pl-4 mb-1">
+                        {item.whoSendName}
+                      </p>
+                      <p className="relative py-3 px-6 mr-10 md:mr-16 lg:mr-20 ml-3 bg-lightwhite text-black rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-5 after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
+                        {item.message}
+                      </p>
+                      <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
+                        {moment(item.date).calendar()}
+                      </p>
+                    </div>
+                  )
             )
-          : groupmessagelist.map((item) =>
+          : singlemessagelist.map((item) =>
               item.whoSendId == auth.currentUser.uid ? (
                 <div className="mt-5 flex justify-end">
                   <div>
@@ -162,30 +161,6 @@ const Messagefield = () => {
               )
             )}
 
-        {/* single message */}
-        {singlemessagelist.map((item) =>
-          item.whoSendId == auth.currentUser.uid ? (
-            <div className="mt-5 flex justify-end">
-              <div>
-                <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
-                  {item.message}
-                </p>
-                <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
-                  {moment(item.date).calendar()}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="mt-5">
-              <p className="relative py-3 px-6 mr-10 md:mr-16 lg:mr-20 ml-3 bg-lightwhite text-black rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-5 after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
-                {item.message}
-              </p>
-              <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
-                {moment(item.date).calendar()}
-              </p>
-            </div>
-          )
-        )}
         {/* <div className="mt-5 flex justify-end">
           <div>
             <picture className="relative p-2 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary rounded-lg inline-block after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
