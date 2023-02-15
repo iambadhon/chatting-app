@@ -83,36 +83,45 @@ const Blockeduser = () => {
         <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
       </div>
       <SimpleBar className="h-[380px] px-4 pt-5">
-        {blockuser.map((item) => (
-          <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
-            <div className="flex items-center gap-2">
-              <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
-                <picture>
-                  <img
-                    className="bg-primary text-white h-full w-full"
-                    src={item.blockPhoto}
-                    alt="Profile"
-                  />
-                </picture>
+        {blockuser.length == 0 ? (
+          <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md capitalize">
+            Blocklist is Empty.
+          </p>
+        ) : (
+          blockuser.map((item) => (
+            <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+              <div className="flex items-center gap-2">
+                <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                  <picture>
+                    <img
+                      className="bg-primary text-white h-full w-full"
+                      src={item.blockPhoto}
+                      alt="Profile"
+                    />
+                  </picture>
+                </div>
+                <div>
+                  <h3 className="font-pop text-lg text-black font-semibold">
+                    {item.block}
+                  </h3>
+                  <p className="font-pop text-sm text-gray font-medium">
+                    {item.date}
+                  </p>
+                </div>
               </div>
               <div>
-                <h3 className="font-pop text-lg text-black font-semibold">
-                  {item.block}
-                </h3>
-                <p className="font-pop text-sm text-gray font-medium">
-                  {item.date}
-                </p>
+                {!item.blockById && (
+                  <button
+                    onClick={() => handleUnblock(item)}
+                    className="my_btn"
+                  >
+                    Unblock
+                  </button>
+                )}
               </div>
             </div>
-            <div>
-              {!item.blockById && (
-                <button onClick={() => handleUnblock(item)} className="my_btn">
-                  Unblock
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </SimpleBar>
     </div>
   );

@@ -121,8 +121,13 @@ const Mygroup = () => {
         )}
       </div>
       <SimpleBar className="h-[380px] px-4 pt-5">
-        {showinfo
-          ? memberjoinrequest.map((item) => (
+        {showinfo ? (
+          memberjoinrequest.length == 0 ? (
+            <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md">
+              No Join Request Available.
+            </p>
+          ) : (
+            memberjoinrequest.map((item) => (
               <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
                 <div className="flex items-center gap-2">
                   <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
@@ -159,8 +164,14 @@ const Mygroup = () => {
                 </div>
               </div>
             ))
-          : showmember
-          ? memberlist.map((item) => (
+          )
+        ) : showmember ? (
+          memberlist.length == 0 ? (
+            <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md capitalize">
+              Group Members will be shown here.
+            </p>
+          ) : (
+            memberlist.map((item) => (
               <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
                 <div className="flex items-center gap-2">
                   <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
@@ -191,44 +202,51 @@ const Mygroup = () => {
                 </div>
               </div>
             ))
-          : mygrouplist.map((item) => (
-              <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
-                <div className="flex items-center gap-2">
-                  <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
-                    <picture>
-                      <img
-                        className="bg-primary text-white h-full w-full"
-                        src="images/profile.png"
-                        alt="Profile"
-                      />
-                    </picture>
-                  </div>
-
-                  <div>
-                    <h3 className="font-pop text-lg text-black font-semibold">
-                      {item.groupName}
-                    </h3>
-                    <p className="font-pop text-sm text-gray font-medium">
-                      {item.groupTagline}
-                    </p>
-                  </div>
+          )
+        ) : mygrouplist.length == 0 ? (
+          <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md capitalize">
+            Groups created by you will be shown here.
+          </p>
+        ) : (
+          mygrouplist.map((item) => (
+            <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+              <div className="flex items-center gap-2">
+                <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                  <picture>
+                    <img
+                      className="bg-primary text-white h-full w-full"
+                      src="images/profile.png"
+                      alt="Profile"
+                    />
+                  </picture>
                 </div>
-                <div className="flex flex-col">
-                  <button
-                    onClick={() => handleGroupJoinRequestShow(item)}
-                    className="my_btn"
-                  >
-                    Info
-                  </button>
-                  <button
-                    onClick={() => handleMember(item)}
-                    className="my_btn mt-1"
-                  >
-                    Members
-                  </button>
+
+                <div>
+                  <h3 className="font-pop text-lg text-black font-semibold">
+                    {item.groupName}
+                  </h3>
+                  <p className="font-pop text-sm text-gray font-medium">
+                    {item.groupTagline}
+                  </p>
                 </div>
               </div>
-            ))}
+              <div className="flex flex-col">
+                <button
+                  onClick={() => handleGroupJoinRequestShow(item)}
+                  className="my_btn"
+                >
+                  Info
+                </button>
+                <button
+                  onClick={() => handleMember(item)}
+                  className="my_btn mt-1"
+                >
+                  Members
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </SimpleBar>
     </div>
   );

@@ -113,6 +113,20 @@ const Grouplist = () => {
         new Date().getMonth() + 1
       }/${new Date().getFullYear()}`,
     });
+
+    //notification
+    set(push(ref(db, "notification")), {
+      adminId: item.adminId,
+      adminName: item.adminName,
+      groupId: item.groupId,
+      groupName: item.groupName,
+      userId: auth.currentUser.uid,
+      userName: auth.currentUser.displayName,
+      userPhoto: auth.currentUser.photoURL,
+      date: `${new Date().getDate()}/${
+        new Date().getMonth() + 1
+      }/${new Date().getFullYear()}`,
+    });
   };
 
   //group Join Request
@@ -217,6 +231,10 @@ const Grouplist = () => {
                 )}
               </div>
             </>
+          ) : grouplist.length == 0 ? (
+            <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md capitalize">
+              No Groups Available for Join
+            </p>
           ) : (
             grouplist.map((item) => (
               <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">

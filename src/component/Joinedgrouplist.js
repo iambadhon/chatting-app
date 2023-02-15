@@ -30,6 +30,14 @@ const Joinedgrouplist = () => {
         }
       });
       setMyGroupList(arr);
+
+      // active Chat null fixed
+      // let userInfo = {
+      //   status: "group",
+      //   name: arr[0].groupName,
+      //   groupId: arr[0].groupId,
+      // };
+      // dispatch(activeChat(userInfo));
     });
   }, []);
 
@@ -53,8 +61,8 @@ const Joinedgrouplist = () => {
       status: "group",
       name: item.groupName,
       groupId: item.groupId,
+      photo: item.photoURL,
     };
-
     dispatch(activeChat(userInfo));
   };
 

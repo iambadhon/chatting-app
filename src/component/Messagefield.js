@@ -87,12 +87,16 @@ const Messagefield = () => {
     });
   }, [activeChatData]);
 
-  return (
+  return activeChatData !== null ? (
     <div className="mt-10 lg:mt-0 pt-6 pb-8 mb-20 md:mb-24 lg:mb-0 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
       <div className="flex items-center justify-between border-b-2 border-solid border-gray pb-4 mx-4 md:mx-8">
         <div className="flex items-center gap-4">
           <picture className="w-[75px] h-[75px] rounded-full overflow-hidden">
-            <img src="images/profile.png" alt="Profile" />
+            <img
+              className="bg-primary text-white h-full w-full"
+              src={activeChatData.photo}
+              alt="Profile"
+            />
           </picture>
           <div>
             <h3 className="font-pop text-lg text-black font-semibold">
@@ -199,6 +203,10 @@ const Messagefield = () => {
         </button>
       </div>
     </div>
+  ) : (
+    <p className="p-4 text-center bg-primary text-xl text-white font-pop font-semibold rounded-md capitalize">
+      You Have No Friend or group.
+    </p>
   );
 };
 

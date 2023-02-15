@@ -38,6 +38,21 @@ const Friend = (props) => {
         }
       });
       setFriends(arr);
+
+      // active Chat null fixed
+      let userInfo = {};
+      if (arr[0].receiverId == auth.currentUser.uid) {
+        userInfo.status = "single";
+        userInfo.id = arr[0].senderId;
+        userInfo.name = arr[0].senderName;
+        userInfo.photo = arr[0].senderPhoto;
+      } else {
+        userInfo.status = "single";
+        userInfo.id = arr[0].receiverId;
+        userInfo.name = arr[0].receiverName;
+        userInfo.photo = arr[0].receiverPhoto;
+      }
+      dispatch(activeChat(userInfo));
     });
   }, []);
 
@@ -78,10 +93,12 @@ const Friend = (props) => {
       userInfo.status = "single";
       userInfo.id = item.senderId;
       userInfo.name = item.senderName;
+      userInfo.photo = item.senderPhoto;
     } else {
       userInfo.status = "single";
       userInfo.id = item.receiverId;
       userInfo.name = item.receiverName;
+      userInfo.photo = item.receiverPhoto;
     }
     dispatch(activeChat(userInfo));
   };
@@ -96,59 +113,68 @@ const Friend = (props) => {
         <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
       </div>
       <SimpleBar className="h-[385px] px-4 pt-5">
-        {friends.map((item) => (
-          <div
-            onClick={() => handleActiveChat(item)}
-            className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0 cursor-pointer"
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
-                <picture>
-                  <img
-                    className="bg-primary text-white h-full w-full"
-                    src={
-                      auth.currentUser.uid == item.senderId
-                        ? item.receiverPhoto
-                        : item.senderPhoto
-                    }
-                    alt="Profile"
-                  />
-                </picture>
+        {friends.length == 0 ? (
+          <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md capitalize">
+            You Have No Friend.
+          </p>
+        ) : (
+          friends.map((item) => (
+            <div
+              onClick={() => handleActiveChat(item)}
+              className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0 cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                  <picture>
+                    <img
+                      className="bg-primary text-white h-full w-full"
+                      src={
+                        auth.currentUser.uid == item.senderId
+                          ? item.receiverPhoto
+                          : item.senderPhoto
+                      }
+                      alt="Profile"
+                    />
+                  </picture>
+                </div>
+                <div>
+                  <h3 className="font-pop text-lg text-black font-semibold">
+                    {auth.currentUser.uid == item.senderId ? (
+                      <p>{item.receiverName}</p>
+                    ) : (
+                      <p>{item.senderName}</p>
+                    )}
+                  </h3>
+                  <p className="font-pop text-sm text-gray font-medium">
+                    {item.date}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-pop text-lg text-black font-semibold">
-                  {auth.currentUser.uid == item.senderId ? (
-                    <h3>{item.receiverName}</h3>
-                  ) : (
-                    <h3>{item.senderName}</h3>
-                  )}
-                </h3>
-                <p className="font-pop text-sm text-gray font-medium">
-                  {item.date}
-                </p>
+              <div className="flex flex-col ">
+                {props.block ? (
+                  <>
+                    <button
+                      onClick={() => handleBlock(item)}
+                      className="my_btn"
+                    >
+                      Block
+                    </button>
+                    <button
+                      onClick={() => handleUnfriend(item)}
+                      className="my_btn !bg-red-500 !border-red-500 mt-1"
+                    >
+                      Unfriend
+                    </button>
+                  </>
+                ) : (
+                  <button className="my_btn !py-1 !px-2">
+                    <BiMessageDetail className="text-3xl" />
+                  </button>
+                )}
               </div>
             </div>
-            <div className="flex flex-col ">
-              {props.block ? (
-                <>
-                  <button onClick={() => handleBlock(item)} className="my_btn">
-                    Block
-                  </button>
-                  <button
-                    onClick={() => handleUnfriend(item)}
-                    className="my_btn !bg-red-500 !border-red-500 mt-1"
-                  >
-                    Unfriend
-                  </button>
-                </>
-              ) : (
-                <button className="my_btn !py-1 !px-2">
-                  <BiMessageDetail className="text-3xl" />
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </SimpleBar>
     </div>
   );
