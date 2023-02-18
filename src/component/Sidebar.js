@@ -59,7 +59,7 @@ const Sidebar = ({ active }) => {
     setUploadImageShow(true);
   };
 
-  //handleSelectImage
+  //handle Select Image
   let handleSelectImage = (e) => {
     setUploadErr("");
     setImgName(e.target.files[0].name);
