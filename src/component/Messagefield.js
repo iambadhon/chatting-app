@@ -109,61 +109,74 @@ const Messagefield = () => {
     setFileErr("");
   };
 
-  //handle Single Image Send
-  let handleSingleImageSend = () => {
+  //handle Image Send
+  let handleImageSend = () => {
     if (file !== "") {
-      setFileErr("Noklf");
+      const imageSendRef = sref(storage, "chatImages/" + file.name);
+      const uploadTask = uploadBytesResumable(imageSendRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("File available at", downloadURL);
+
+            if (file !== "") {
+              if (activeChatData.status == "group") {
+                set(push(ref(db, "groupMessage")), {
+                  whoSendId: auth.currentUser.uid,
+                  whoSendName: auth.currentUser.displayName,
+                  whoReceiveName: activeChatData.name,
+                  whoReceiveId: activeChatData.groupId,
+                  image: downloadURL,
+                  date: `${new Date().getFullYear()}/${
+                    new Date().getMonth() + 1
+                  }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+                }).then(() => {
+                  setSendImageShow(false);
+                  setFile("");
+                  setFileErr("");
+                  setProgress("");
+                });
+              } else {
+                set(push(ref(db, "singleMessage")), {
+                  whoSendId: auth.currentUser.uid,
+                  whoSendName: auth.currentUser.displayName,
+                  whoReceiveName: activeChatData.name,
+                  whoReceiveId: activeChatData.id,
+                  image: downloadURL,
+                  date: `${new Date().getFullYear()}/${
+                    new Date().getMonth() + 1
+                  }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+                }).then(() => {
+                  setSendImageShow(false);
+                  setFile("");
+                  setFileErr("");
+                  setProgress("");
+                });
+              }
+            }
+          });
+        }
+      );
     } else {
       setFileErr("No File Selected!");
     }
-    const singleImageRef = sref(storage, "singleImages/" + file.name);
-    const uploadTask = uploadBytesResumable(singleImageRef, file);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-      (error) => {
-        // Handle unsuccessful uploads
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-
-          if (file !== "") {
-            if (activeChatData.status == "group") {
-              console.log("ami group msg");
-            } else {
-              set(push(ref(db, "singleMessage")), {
-                whoSendId: auth.currentUser.uid,
-                whoSendName: auth.currentUser.displayName,
-                whoReceiveName: activeChatData.name,
-                whoReceiveId: activeChatData.id,
-                image: downloadURL,
-                date: `${new Date().getFullYear()}/${
-                  new Date().getMonth() + 1
-                }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
-              }).then(() => {
-                setSendImageShow(false);
-                setFile("");
-                setFileErr("");
-                setProgress("");
-              });
-            }
-          }
-        });
-      }
-    );
   };
 
   return activeChatData !== null ? (
@@ -194,19 +207,33 @@ const Messagefield = () => {
         {activeChatData.status == "group"
           ? groupmessagelist.map((item) =>
               item.whoSendId == auth.currentUser.uid
-                ? item.whoReceiveId == activeChatData.groupId && (
-                    <div className="mt-5 flex justify-end">
-                      <div>
-                        <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
-                          {item.message}
-                        </p>
-                        <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
-                          {moment(item.date).calendar()}
-                        </p>
+                ? item.message
+                  ? item.whoReceiveId == activeChatData.groupId && (
+                      <div className="mt-5 flex justify-end">
+                        <div>
+                          <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                            {item.message}
+                          </p>
+                          <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
+                            {moment(item.date).calendar()}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )
-                : item.whoReceiveId == activeChatData.groupId && (
+                    )
+                  : item.whoReceiveId == activeChatData.groupId && (
+                      <div className="mt-5 flex justify-end">
+                        <div>
+                          <picture className="relative p-2 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary rounded-lg inline-block after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                            <img src={item.image} alt="chat" />
+                          </picture>
+                          <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
+                            {moment(item.date).calendar()}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                : item.message
+                ? item.whoReceiveId == activeChatData.groupId && (
                     <div className="mt-5">
                       <p className="font-pop font-medium text-gray text-sm pl-4 mb-1">
                         {item.whoSendName}
@@ -214,6 +241,19 @@ const Messagefield = () => {
                       <p className="relative py-3 px-6 mr-10 md:mr-16 lg:mr-20 ml-3 bg-lightwhite text-black rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-5 after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
                         {item.message}
                       </p>
+                      <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
+                        {moment(item.date).calendar()}
+                      </p>
+                    </div>
+                  )
+                : item.whoReceiveId == activeChatData.groupId && (
+                    <div className="mt-5">
+                      <p className="font-pop font-medium text-gray text-sm pl-4 mb-1">
+                        {item.whoSendName}
+                      </p>
+                      <picture className="relative p-2 mr-10 md:mr-16 lg:mr-20 ml-3 bg-lightwhite rounded-lg inline-block after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-5 after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
+                        <img src={item.image} alt="chat" />
+                      </picture>
                       <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
                         {moment(item.date).calendar()}
                       </p>
@@ -313,7 +353,7 @@ const Messagefield = () => {
               <button
                 className="my_btn !text-base md:!text-xl !rounded-md !p-3 md:!p-4 !font-nunito after:hover:!bg-lightwhite"
                 type="button"
-                onClick={handleSingleImageSend}
+                onClick={handleImageSend}
               >
                 Send Image
               </button>

@@ -80,7 +80,7 @@ const Sidebar = ({ active }) => {
   //handle Upload Image
   const handleUploadImage = () => {
     setLoading(true);
-    const storageRef = ref(storage, imgname);
+    const storageRef = ref(storage, "profilePicture/" + imgname);
     if (img !== "") {
       if (typeof cropper !== "undefined") {
         cropper.getCroppedCanvas().toDataURL();
