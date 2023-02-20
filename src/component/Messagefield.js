@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { getDatabase, ref, set, push, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import moment from "moment/moment";
+import EmojiPicker from "emoji-picker-react";
 import {
   getStorage,
   ref as sref,
@@ -39,36 +40,47 @@ const Messagefield = () => {
   let [groupmessagelist, setGroupMessageList] = useState([]);
   //upload image modlal
   let [sendimageshow, setSendImageShow] = useState(false);
+  //emoji show
+  let [emojishow, setEmojiShow] = useState(false);
 
   //handle Message
   let handleMessage = (e) => {
     setMessage(e.target.value);
+    setEmojiShow(false);
   };
 
   //handle Message Send
   let handleMessageSend = () => {
-    if (activeChatData.status == "group") {
-      set(push(ref(db, "groupMessage")), {
-        whoSendId: auth.currentUser.uid,
-        whoSendName: auth.currentUser.displayName,
-        whoReceiveName: activeChatData.name,
-        whoReceiveId: activeChatData.groupId,
-        message: message,
-        date: `${new Date().getFullYear()}/${
-          new Date().getMonth() + 1
-        }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
-      });
-    } else {
-      set(push(ref(db, "singleMessage")), {
-        whoSendId: auth.currentUser.uid,
-        whoSendName: auth.currentUser.displayName,
-        whoReceiveName: activeChatData.name,
-        whoReceiveId: activeChatData.id,
-        message: message,
-        date: `${new Date().getFullYear()}/${
-          new Date().getMonth() + 1
-        }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
-      });
+    if (message != "") {
+      if (activeChatData.status == "group") {
+        set(push(ref(db, "groupMessage")), {
+          whoSendId: auth.currentUser.uid,
+          whoSendName: auth.currentUser.displayName,
+          whoReceiveName: activeChatData.name,
+          whoReceiveId: activeChatData.groupId,
+          message: message,
+          date: `${new Date().getFullYear()}/${
+            new Date().getMonth() + 1
+          }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+        }).then(() => {
+          setMessage("");
+          setEmojiShow(false);
+        });
+      } else {
+        set(push(ref(db, "singleMessage")), {
+          whoSendId: auth.currentUser.uid,
+          whoSendName: auth.currentUser.displayName,
+          whoReceiveName: activeChatData.name,
+          whoReceiveId: activeChatData.id,
+          message: message,
+          date: `${new Date().getFullYear()}/${
+            new Date().getMonth() + 1
+          }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+        }).then(() => {
+          setMessage("");
+          setEmojiShow(false);
+        });
+      }
     }
   };
 
@@ -180,7 +192,7 @@ const Messagefield = () => {
   };
 
   return activeChatData !== null ? (
-    <div className="mt-10 lg:mt-0 pt-6 pb-8 mb-20 md:mb-24 lg:mb-0 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+    <div className="mt-10 lg:mt-0 pt-6 pb-8 mb-20 md:mb-24 lg:mb-0 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] relative">
       <div className="flex items-center justify-between border-b-2 border-solid border-gray pb-4 mx-4 md:mx-8">
         <div className="flex items-center gap-4">
           <picture className="w-[75px] h-[75px] rounded-full overflow-hidden">
@@ -310,6 +322,7 @@ const Messagefield = () => {
         <div className="w-[88%] sml:w-[90%] relative">
           <input
             onChange={handleMessage}
+            value={message}
             type="text"
             placeholder="Write Your Message"
             className="py-3 sml:py-3.5 pl-2.5 sml:pl-6 pr-[58px] sml:pr-20 bg-lightwhite text-black font-pop font-medium rounded-lg w-full border-2 border-solid border-transparent focus:border-primary outline-none"
@@ -318,8 +331,12 @@ const Messagefield = () => {
             onClick={() => setSendImageShow(true)}
             className="absolute top-3.5 right-2 sml:right-3 text-2xl sml:text-3xl cursor-pointer text-primary"
           />
-          <FaRegSmile className="absolute top-[17px] right-9 sml:right-12 text-xl sml:text-2xl cursor-pointer text-primary" />
+          <FaRegSmile
+            onClick={() => setEmojiShow(!emojishow)}
+            className="absolute top-[17px] right-9 sml:right-12 text-xl sml:text-2xl cursor-pointer text-primary"
+          />
         </div>
+
         <button
           onClick={handleMessageSend}
           className="my_btn !p-0 w-[12%] sml:w-[10%]"
@@ -327,6 +344,12 @@ const Messagefield = () => {
           <RiSendPlaneFill className="text-3xl sml:text-4xl lg:!text-3xl xl:!text-4xl mx-auto" />
         </button>
       </div>
+      {emojishow && (
+        <div className="absolute bottom-24 left-8">
+          <EmojiPicker onEmojiClick={(e) => setMessage(message + e.emoji)} />
+        </div>
+      )}
+
       {/* send image modal */}
       {sendimageshow && (
         <div className="fixed top-0 left-0 w-full h-screen bg-black/75 flex justify-center items-center z-10 px-4">
