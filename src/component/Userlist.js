@@ -1,5 +1,6 @@
 import React from "react";
-import { BiDotsVerticalRounded } from "react-icons/bi";
+import { ImCross } from "react-icons/im";
+import { FiSearch } from "react-icons/fi";
 import SimpleBar from "simplebar-react";
 import { useEffect, useState } from "react";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
@@ -21,6 +22,8 @@ const Userlist = () => {
   let [friendlist, setFriendList] = useState([]);
   //block list
   let [blocklist, setBlockList] = useState([]);
+  //search show
+  let [searchshow, setSearchShow] = useState(false);
 
   useEffect(() => {
     const usersRef = ref(db, "users/");
@@ -86,8 +89,8 @@ const Userlist = () => {
   }, []);
 
   //handle Search
-  let arr = [];
   let handleSearch = (e) => {
+    let arr = [];
     userslist.filter((item) => {
       if (e.target.value != "") {
         if (item.name.toLowerCase().includes(e.target.value.toLowerCase())) {
@@ -96,18 +99,43 @@ const Userlist = () => {
       } else {
         arr = [];
       }
-
       setSearchUser(arr);
     });
   };
 
+  //handle Search Show
+  let handleSearchShow = () => {
+    setSearchShow(true);
+  };
+
+  //handle Search Hide
+  let handleSearchHide = () => {
+    setSearchShow(false);
+    setSearchUser([]);
+  };
+
   return (
-    <div className="mt-10 lg:mt-11 xl:mt-0 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
-      <Search type={handleSearch} />
-      <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
-        <h2 className="font-pop font-semibold text-xl text-black">User List</h2>
-        <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
-      </div>
+    <div className="mt-10 lg:mt-11 xl:mt-0 py-2.5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
+      {searchshow ? (
+        <div className="pb-1.5 border-b-2 border-solid border-gray/40 relative">
+          <Search type={handleSearch} />
+          <ImCross
+            onClick={handleSearchHide}
+            className="absolute top-4 right-4 text-md cursor-pointer text-primary"
+          />
+        </div>
+      ) : (
+        <div className="flex justify-between px-4 py-3.5 border-b-2 border-solid border-gray/40">
+          <h2 className="font-pop font-semibold text-xl text-black">
+            User List
+          </h2>
+          <FiSearch
+            onClick={handleSearchShow}
+            className="text-2xl cursor-pointer text-primary"
+          />
+        </div>
+      )}
+
       <SimpleBar className="h-[385px] px-4 pt-5">
         {searchuser.length > 0
           ? searchuser.map((item) => (

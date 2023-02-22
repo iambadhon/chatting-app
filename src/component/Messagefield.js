@@ -395,7 +395,7 @@ const Messagefield = () => {
     </div>
   ) : (
     <p className="p-4 text-center bg-primary text-xl text-white font-pop font-semibold rounded-md capitalize">
-      You Have No Friend or group.
+      You Have No Friend.
     </p>
   );
 };
