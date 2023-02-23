@@ -1,5 +1,8 @@
 import React from "react";
+import { ImCross } from "react-icons/im";
+import { FiSearch } from "react-icons/fi";
 import { useState, useEffect } from "react";
+import Search from "./Search";
 import SimpleBar from "simplebar-react";
 import { ThreeDots } from "react-loader-spinner";
 import { ToastContainer, toast } from "react-toastify";
@@ -27,6 +30,10 @@ const Grouplist = () => {
   let [groupjoinrequest, setgroupJoinRequest] = useState([]);
   //member list
   let [memberlist, setMemberList] = useState([]);
+  //search user
+  let [searchuser, setSearchUser] = useState([]);
+  //search show
+  let [searchshow, setSearchShow] = useState(false);
 
   // handle Group Name
   let handleGroupName = (e) => {
@@ -153,6 +160,34 @@ const Grouplist = () => {
     });
   }, []);
 
+  //handle Search
+  let handleSearch = (e) => {
+    let arr = [];
+    grouplist.filter((item) => {
+      if (e.target.value != "") {
+        if (
+          item.groupName.toLowerCase().includes(e.target.value.toLowerCase())
+        ) {
+          arr.push(item);
+        }
+      } else {
+        arr = [];
+      }
+      setSearchUser(arr);
+    });
+  };
+
+  //handle Search Show
+  let handleSearchShow = () => {
+    setSearchShow(true);
+  };
+
+  //handle Search Hide
+  let handleSearchHide = () => {
+    setSearchShow(false);
+    setSearchUser([]);
+  };
+
   return (
     <section>
       <ToastContainer
@@ -161,19 +196,38 @@ const Grouplist = () => {
         theme="colored"
         className={`!px-3 !mt-3`}
       />
-      <div className="mt-10 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
-        <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
-          <h2 className="font-pop font-semibold text-xl text-black">
-            Group List
-          </h2>
-          <button
-            onClick={() => setCreateGroup(!creategroup)}
-            className="my_btn"
-          >
-            {creategroup ? "Go Back" : "Create Group"}
-          </button>
-        </div>
-        <SimpleBar className="h-[283px] px-4 pt-5">
+      <div className="py-2.5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
+        {searchshow ? (
+          <div className="pb-[7px] border-b-2 border-solid border-gray/40 relative">
+            <Search type={handleSearch} />
+            <ImCross
+              onClick={handleSearchHide}
+              className="absolute top-4 right-4 text-md cursor-pointer text-primary"
+            />
+          </div>
+        ) : (
+          <div className="flex justify-between items-center px-4 py-3 border-b-2 border-solid border-gray/40">
+            <h2 className="font-pop font-semibold text-xl text-black">
+              Group List
+            </h2>
+            <div className="flex items-center gap-x-3 ">
+              <button
+                onClick={() => setCreateGroup(!creategroup)}
+                className="my_btn"
+              >
+                {creategroup ? "Go Back" : "Create Group"}
+              </button>
+              {!creategroup && (
+                <FiSearch
+                  onClick={handleSearchShow}
+                  className="text-2xl cursor-pointer text-primary"
+                />
+              )}
+            </div>
+          </div>
+        )}
+
+        <SimpleBar className="h-[385px] px-4 pt-5">
           {creategroup ? (
             <>
               <div className="relative mt-1">
@@ -231,6 +285,54 @@ const Grouplist = () => {
                 )}
               </div>
             </>
+          ) : searchuser.length > 0 ? (
+            searchuser.map((item) => (
+              <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+                <div className="flex items-center gap-2">
+                  <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                    <picture>
+                      <img
+                        className="bg-primary text-white h-full w-full"
+                        src="images/profile.png"
+                        alt="Profile"
+                      />
+                    </picture>
+                  </div>
+                  <div>
+                    <h3 className="font-pop text-lg text-black font-semibold">
+                      {item.groupName}
+                    </h3>
+                    <p className="font-pop text-sm text-gray font-medium">
+                      {item.groupTagline}
+                    </p>
+                    <p className="font-pop text-xs text-gray font-medium">
+                      Admin:
+                      <span className="pl-1">{item.adminName}</span>
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  {memberlist.includes(item.groupId + auth.currentUser.uid) ||
+                  memberlist.includes(auth.currentUser.uid + item.groupId) ? (
+                    <button className="my_btn">Joined</button>
+                  ) : groupjoinrequest.includes(
+                      item.groupId + auth.currentUser.uid
+                    ) ||
+                    groupjoinrequest.includes(
+                      auth.currentUser.uid + item.groupId
+                    ) ? (
+                    <button className="my_btn">Pending</button>
+                  ) : (
+                    <button
+                      onClick={() => handleGroupJoin(item)}
+                      className="my_btn"
+                    >
+                      Join
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))
           ) : grouplist.length == 0 ? (
             <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md capitalize">
               No Groups Available for Join

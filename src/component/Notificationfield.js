@@ -4,8 +4,8 @@ import SimpleBar from "simplebar-react";
 
 const Notificationfield = () => {
   return (
-    <div className="mt-8 mb-20 md:mb-24 lg:mb-0 px-1 lg:px-2 py-8 lg:py-10 border border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
-      <SimpleBar className="h-[600px] sml:h-[400px] md:!h-[800px] px-4 lg:px-10">
+    <div className="mb-20 md:mb-24 lg:mb-0 px-1 lg:px-2 py-8 lg:py-10 border border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+      <SimpleBar className="h-[600px] sml:h-[400px] md:!h-[895px] px-4 lg:px-10">
         <div className="flex flex-col sml:flex-row gap-x-5 lg:gap-x-8 items-center border-b border-solid border-gray pb-6 mb-6">
           <IoMdNotifications className="text-4xl mb-2 sml:mb-0 sml:w-[5%]" />
           <p className="font-pop text-base font-medium text-black text-justify sml:text-left sml:w-[95%]">

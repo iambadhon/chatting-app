@@ -6,7 +6,7 @@ import { RiImageAddFill } from "react-icons/ri";
 
 const Profilesetting = () => {
   return (
-    <div className="h-[700px] md:h-[800px] lg:h-[875px] mt-10 md:mb-24 lg:mb-0 py-8 px-6 sml:p-10 border border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] relative">
+    <div className="h-[700px] md:h-[800px] lg:h-[975px] py-8 px-6 sml:p-10 border border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] relative">
       <h2 className="font-pop font-semibold text-xl text-black">
         Profile Settings
       </h2>

@@ -142,7 +142,7 @@ const Mygroup = () => {
   return (
     <div className="mt-10 lg:mt-11 py-2.5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
       {searchshow ? (
-        <div className="pb-1.5 border-b-2 border-solid border-gray/40 relative">
+        <div className="pb-2 border-b-2 border-solid border-gray/40 relative">
           <Search type={handleSearch} />
           <ImCross
             onClick={handleSearchHide}
@@ -150,8 +150,8 @@ const Mygroup = () => {
           />
         </div>
       ) : (
-        <div className="flex justify-between px-4 py-3.5 border-b-2 border-solid border-gray/40">
-          <h2 className="font-pop font-semibold text-xl text-black">
+        <div className="flex justify-between items-center px-4 py-3 border-b-2 border-solid border-gray/40">
+          <h2 className="font-pop font-semibold text-xl text-black pt-[6px]">
             My Groups
           </h2>
           {showinfo ? (

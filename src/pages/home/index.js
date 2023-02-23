@@ -4,7 +4,6 @@ import Friend from "../../component/Friend";
 import Friendrequest from "../../component/Friendrequest";
 import Grouplist from "../../component/Grouplist";
 import Mygroup from "../../component/Mygroup";
-import Search from "../../component/Search";
 import Sidebar from "../../component/Sidebar";
 import Userlist from "../../component/Userlist";
 import { getAuth, signOut } from "firebase/auth";
@@ -48,7 +47,6 @@ const Home = () => {
           </div>
           <div className="w-full lg:h-[980px] xl:h-full lg:pb-1.5 xl:pb-0 lg:overflow-y-scroll xl:overflow-visible lg:scrollbar-hide xl:scrollbar-default lg:w-[88%] xl:w-[86%] flex flex-col lg:flex-row gap-x-8 lg:flex-wrap xl:flex-nowrap">
             <div className="w-full lg:w-[48%] xl:w-[40%]">
-              <Search />
               <Grouplist />
               <Friendrequest />
             </div>

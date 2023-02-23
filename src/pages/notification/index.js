@@ -1,5 +1,4 @@
 import React from "react";
-import Search from "../../component/Search";
 import Sidebar from "../../component/Sidebar";
 import Notificationfield from "../../component/Notificationfield";
 
@@ -10,7 +9,6 @@ const Notification = () => {
         <Sidebar active="notification" />
       </div>
       <div className="w-full lg:w-[1140px]">
-        <Search />
         <Notificationfield />
       </div>
     </div>

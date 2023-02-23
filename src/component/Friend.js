@@ -155,7 +155,7 @@ const Friend = (props) => {
           />
         </div>
       ) : (
-        <div className="flex justify-between px-4 py-3.5 border-b-2 border-solid border-gray/40">
+        <div className="flex justify-between items-center px-4 py-3.5 border-b-2 border-solid border-gray/40">
           <h2 className="font-pop font-semibold text-xl text-black">Friends</h2>
           <FiSearch
             onClick={handleSearchShow}

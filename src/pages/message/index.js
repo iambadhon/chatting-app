@@ -2,7 +2,6 @@ import React from "react";
 import Friend from "../../component/Friend";
 import Joinedgrouplist from "../../component/Joinedgrouplist";
 import Messagefield from "../../component/Messagefield";
-import Search from "../../component/Search";
 import Sidebar from "../../component/Sidebar";
 
 const Message = () => {
@@ -12,7 +11,6 @@ const Message = () => {
         <Sidebar active="message" />
       </div>
       <div className="w-full lg:w-[426px]">
-        <Search />
         <Joinedgrouplist />
         <Friend marginT="37px" />
       </div>
