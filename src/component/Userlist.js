@@ -14,14 +14,14 @@ const Userlist = () => {
   const db = getDatabase();
   //users list
   let [userslist, setUsersList] = useState([]);
-  //search user
-  let [searchuser, setSearchUser] = useState([]);
   //friend request
   let [friendrequest, setFriendRequest] = useState([]);
   //friends list
   let [friendlist, setFriendList] = useState([]);
   //block list
   let [blocklist, setBlockList] = useState([]);
+  //search user
+  let [searchuser, setSearchUser] = useState([]);
   //search show
   let [searchshow, setSearchShow] = useState(false);
 

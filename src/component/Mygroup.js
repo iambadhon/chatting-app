@@ -1,7 +1,10 @@
 import React from "react";
+import { ImCross } from "react-icons/im";
+import { FiSearch } from "react-icons/fi";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import SimpleBar from "simplebar-react";
 import { useState, useEffect } from "react";
+import Search from "./Search";
 import {
   getDatabase,
   ref,
@@ -27,6 +30,10 @@ const Mygroup = () => {
   let [showinfo, setShowInfo] = useState(false);
   //show member
   let [showmember, setShowMember] = useState(false);
+  //search user
+  let [searchuser, setSearchUser] = useState([]);
+  //search show
+  let [searchshow, setSearchShow] = useState(false);
 
   useEffect(() => {
     const groupsRef = ref(db, "groups");
@@ -104,22 +111,65 @@ const Mygroup = () => {
     remove(ref(db, "groupMembers/" + item.groupId));
   };
 
+  //handle Search
+  let handleSearch = (e) => {
+    let arr = [];
+    mygrouplist.filter((item) => {
+      if (e.target.value != "") {
+        if (
+          item.groupName.toLowerCase().includes(e.target.value.toLowerCase())
+        ) {
+          arr.push(item);
+        }
+      } else {
+        arr = [];
+      }
+      setSearchUser(arr);
+    });
+  };
+
+  //handle Search Show
+  let handleSearchShow = () => {
+    setSearchShow(true);
+  };
+
+  //handle Search Hide
+  let handleSearchHide = () => {
+    setSearchShow(false);
+    setSearchUser([]);
+  };
+
   return (
-    <div className="mt-10 lg:mt-11 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
-      <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
-        <h2 className="font-pop font-semibold text-xl text-black">My Groups</h2>
-        {showinfo ? (
-          <button onClick={() => setShowInfo(false)} className="my_btn">
-            Go Back
-          </button>
-        ) : showmember ? (
-          <button onClick={() => setShowMember(false)} className="my_btn">
-            Go Back
-          </button>
-        ) : (
-          <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
-        )}
-      </div>
+    <div className="mt-10 lg:mt-11 py-2.5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden">
+      {searchshow ? (
+        <div className="pb-1.5 border-b-2 border-solid border-gray/40 relative">
+          <Search type={handleSearch} />
+          <ImCross
+            onClick={handleSearchHide}
+            className="absolute top-4 right-4 text-md cursor-pointer text-primary"
+          />
+        </div>
+      ) : (
+        <div className="flex justify-between px-4 py-3.5 border-b-2 border-solid border-gray/40">
+          <h2 className="font-pop font-semibold text-xl text-black">
+            My Groups
+          </h2>
+          {showinfo ? (
+            <button onClick={() => setShowInfo(false)} className="my_btn">
+              Go Back
+            </button>
+          ) : showmember ? (
+            <button onClick={() => setShowMember(false)} className="my_btn">
+              Go Back
+            </button>
+          ) : (
+            <FiSearch
+              onClick={handleSearchShow}
+              className="text-2xl cursor-pointer text-primary"
+            />
+          )}
+        </div>
+      )}
       <SimpleBar className="h-[380px] px-4 pt-5">
         {showinfo ? (
           memberjoinrequest.length == 0 ? (
@@ -203,6 +253,45 @@ const Mygroup = () => {
               </div>
             ))
           )
+        ) : searchuser.length > 0 ? (
+          searchuser.map((item) => (
+            <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
+              <div className="flex items-center gap-2">
+                <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                  <picture>
+                    <img
+                      className="bg-primary text-white h-full w-full"
+                      src="images/profile.png"
+                      alt="Profile"
+                    />
+                  </picture>
+                </div>
+
+                <div>
+                  <h3 className="font-pop text-lg text-black font-semibold">
+                    {item.groupName}
+                  </h3>
+                  <p className="font-pop text-sm text-gray font-medium">
+                    {item.groupTagline}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <button
+                  onClick={() => handleGroupJoinRequestShow(item)}
+                  className="my_btn"
+                >
+                  Info
+                </button>
+                <button
+                  onClick={() => handleMember(item)}
+                  className="my_btn mt-1"
+                >
+                  Members
+                </button>
+              </div>
+            </div>
+          ))
         ) : mygrouplist.length == 0 ? (
           <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md capitalize">
             Groups created by you will be shown here.

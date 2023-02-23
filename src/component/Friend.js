@@ -1,7 +1,10 @@
 import React from "react";
-import { BiDotsVerticalRounded, BiMessageDetail } from "react-icons/bi";
+import { BiMessageDetail } from "react-icons/bi";
+import { ImCross } from "react-icons/im";
+import { FiSearch } from "react-icons/fi";
 import SimpleBar from "simplebar-react";
 import { useEffect, useState } from "react";
+import Search from "./Search";
 import {
   getDatabase,
   ref,
@@ -23,6 +26,10 @@ const Friend = (props) => {
   let dispatch = useDispatch();
   //friend request
   let [friends, setFriends] = useState([]);
+  //search user
+  let [searchuser, setSearchUser] = useState([]);
+  //search show
+  let [searchshow, setSearchShow] = useState(false);
 
   //friend
   useEffect(() => {
@@ -103,17 +110,119 @@ const Friend = (props) => {
     dispatch(activeChat(userInfo));
   };
 
+  //handle Search
+  let handleSearch = (e) => {
+    let arr = [];
+    friends.filter((item) => {
+      if (e.target.value != "") {
+        if (
+          item.receiverName
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase()) ||
+          item.senderName.toLowerCase().includes(e.target.value.toLowerCase())
+        ) {
+          arr.push(item);
+        }
+      } else {
+        arr = [];
+      }
+      setSearchUser(arr);
+    });
+  };
+
+  //handle Search Show
+  let handleSearchShow = () => {
+    setSearchShow(true);
+  };
+
+  //handle Search Hide
+  let handleSearchHide = () => {
+    setSearchShow(false);
+    setSearchUser([]);
+  };
+
   return (
     <div
       style={{ marginTop: props.marginT }}
-      className="mt-10 lg:mt-0 py-5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden"
+      className="mt-10 lg:mt-0 py-2.5 px-1 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] overflow-hidden"
     >
-      <div className="flex justify-between px-4 pb-2.5 border-b-2 border-solid border-gray/40">
-        <h2 className="font-pop font-semibold text-xl text-black">Friends</h2>
-        <BiDotsVerticalRounded className="text-3xl cursor-pointer text-primary" />
-      </div>
+      {searchshow ? (
+        <div className="pb-1.5 border-b-2 border-solid border-gray/40 relative">
+          <Search type={handleSearch} />
+          <ImCross
+            onClick={handleSearchHide}
+            className="absolute top-4 right-4 text-md cursor-pointer text-primary"
+          />
+        </div>
+      ) : (
+        <div className="flex justify-between px-4 py-3.5 border-b-2 border-solid border-gray/40">
+          <h2 className="font-pop font-semibold text-xl text-black">Friends</h2>
+          <FiSearch
+            onClick={handleSearchShow}
+            className="text-2xl cursor-pointer text-primary"
+          />
+        </div>
+      )}
+
       <SimpleBar className="h-[385px] px-4 pt-5">
-        {friends.length == 0 ? (
+        {searchuser.length > 0 ? (
+          searchuser.map((item) => (
+            <div
+              onClick={() => handleActiveChat(item)}
+              className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0 cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+                  <picture>
+                    <img
+                      className="bg-primary text-white h-full w-full"
+                      src={
+                        auth.currentUser.uid == item.senderId
+                          ? item.receiverPhoto
+                          : item.senderPhoto
+                      }
+                      alt="Profile"
+                    />
+                  </picture>
+                </div>
+                <div>
+                  <h3 className="font-pop text-lg text-black font-semibold">
+                    {auth.currentUser.uid == item.senderId ? (
+                      <p>{item.receiverName}</p>
+                    ) : (
+                      <p>{item.senderName}</p>
+                    )}
+                  </h3>
+                  <p className="font-pop text-sm text-gray font-medium">
+                    {item.date}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col ">
+                {props.block ? (
+                  <>
+                    <button
+                      onClick={() => handleBlock(item)}
+                      className="my_btn"
+                    >
+                      Block
+                    </button>
+                    <button
+                      onClick={() => handleUnfriend(item)}
+                      className="my_btn !bg-red-500 !border-red-500 mt-1"
+                    >
+                      Unfriend
+                    </button>
+                  </>
+                ) : (
+                  <button className="my_btn !py-1 !px-2">
+                    <BiMessageDetail className="text-3xl" />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))
+        ) : friends.length == 0 ? (
           <p className="p-2.5 bg-primary text-white text-lg font-pop font-semibold text-center rounded-md capitalize">
             You Have No Friend.
           </p>
