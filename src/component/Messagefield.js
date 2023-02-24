@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { BiDotsVerticalRounded } from "react-icons/bi";
+import { ImCross } from "react-icons/im";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { FaRegSmile } from "react-icons/fa";
@@ -345,9 +346,15 @@ const Messagefield = () => {
         </button>
       </div>
       {emojishow && (
-        <div className="absolute bottom-24 left-8">
-          <EmojiPicker onEmojiClick={(e) => setMessage(message + e.emoji)} />
-        </div>
+        <>
+          <div className="absolute bottom-24 left-8">
+            <EmojiPicker onEmojiClick={(e) => setMessage(message + e.emoji)} />
+          </div>
+          <ImCross
+            onClick={() => setEmojiShow(false)}
+            className="absolute bottom-[122px] left-[350px] text-primary cursor-pointer z-10"
+          />
+        </>
       )}
 
       {/* send image modal */}
