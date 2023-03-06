@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { BiDotsVerticalRounded } from "react-icons/bi";
+import { BsFillMicFill } from "react-icons/bs";
 import { ImCross } from "react-icons/im";
-import { RiSendPlaneFill } from "react-icons/ri";
+import { RiSendPlaneFill, RiDeleteBin5Line } from "react-icons/ri";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { FaRegSmile } from "react-icons/fa";
 import ScrollToBottom from "react-scroll-to-bottom";
@@ -17,6 +18,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 
 const Messagefield = () => {
   //Authentication
@@ -29,6 +31,8 @@ const Messagefield = () => {
   let activeChatData = useSelector((state) => state.activeChat.value);
   //message
   let [message, setMessage] = useState("");
+  //emoji
+  let [emoji, setEmoji] = useState("");
   //file
   let [file, setFile] = useState("");
   //file error
@@ -43,10 +47,13 @@ const Messagefield = () => {
   let [sendimageshow, setSendImageShow] = useState(false);
   //emoji show
   let [emojishow, setEmojiShow] = useState(false);
+  //audio
+  let [audio, setAudio] = useState("");
 
   //handle Message
   let handleMessage = (e) => {
     setMessage(e.target.value);
+    setEmoji(e.target.value);
     setEmojiShow(false);
   };
 
@@ -60,29 +67,55 @@ const Messagefield = () => {
           whoReceiveName: activeChatData.name,
           whoReceiveId: activeChatData.groupId,
           message: message,
+          emoji: emoji,
           date: `${new Date().getFullYear()}/${
             new Date().getMonth() + 1
           }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
         }).then(() => {
           setMessage("");
+          setEmoji("");
           setEmojiShow(false);
         });
       } else {
-        set(push(ref(db, "singleMessage")), {
-          whoSendId: auth.currentUser.uid,
-          whoSendName: auth.currentUser.displayName,
-          whoReceiveName: activeChatData.name,
-          whoReceiveId: activeChatData.id,
-          message: message,
-          date: `${new Date().getFullYear()}/${
-            new Date().getMonth() + 1
-          }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
-        }).then(() => {
-          setMessage("");
-          setEmojiShow(false);
-        });
+        if (message) {
+          set(push(ref(db, "singleMessage")), {
+            whoSendId: auth.currentUser.uid,
+            whoSendName: auth.currentUser.displayName,
+            whoReceiveName: activeChatData.name,
+            whoReceiveId: activeChatData.id,
+            message: message,
+            date: `${new Date().getFullYear()}/${
+              new Date().getMonth() + 1
+            }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+          }).then(() => {
+            setMessage("");
+            setEmoji("");
+            setEmojiShow(false);
+          });
+        } else if (emoji) {
+          set(push(ref(db, "singleMessage")), {
+            whoSendId: auth.currentUser.uid,
+            whoSendName: auth.currentUser.displayName,
+            whoReceiveName: activeChatData.name,
+            whoReceiveId: activeChatData.id,
+            emoji: emoji,
+            date: `${new Date().getFullYear()}/${
+              new Date().getMonth() + 1
+            }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+          }).then(() => {
+            setMessage("");
+            setEmoji("");
+            setEmojiShow(false);
+          });
+        }
       }
     }
+  };
+
+  //handle Emoji
+  let handleEmoji = (e) => {
+    setMessage(message + e.emoji);
+    setEmoji(emoji + e.emoji);
   };
 
   //Single Message List
@@ -192,6 +225,13 @@ const Messagefield = () => {
     }
   };
 
+  //Audio Recorder
+  const recorderControls = useAudioRecorder();
+  const addAudioElement = (blob) => {
+    const url = URL.createObjectURL(blob);
+    setAudio(url);
+  };
+
   return activeChatData !== null ? (
     <div className="mt-10 lg:mt-0 pt-6 pb-8 mb-20 md:mb-24 lg:mb-0 border border-solid border-gray/25 rounded-3xl shadow-[0_4px_4px_rgba(0,0,0,0.25)] relative">
       <div className="flex items-center justify-between border-b-2 border-solid border-gray pb-4 mx-4 md:mx-8">
@@ -286,6 +326,17 @@ const Messagefield = () => {
                       </p>
                     </div>
                   </div>
+                ) : item.emoji ? (
+                  <div className="mt-5 flex justify-end">
+                    <div>
+                      <p className=" ml-10 md:ml-16 lg:ml-20 mr-3 text-3xl md:text-4xl inline-block !leading-snug">
+                        {item.emoji}
+                      </p>
+                      <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1.5">
+                        {moment(item.date).calendar()}
+                      </p>
+                    </div>
+                  </div>
                 ) : (
                   <div className="mt-5 flex justify-end">
                     <div>
@@ -320,39 +371,65 @@ const Messagefield = () => {
             )}
       </ScrollToBottom>
       <div className="border-t-2 border-solid border-gray flex gap-x-2 sml:gap-x-5 pt-7 mx-4 md:mx-8">
+        <div className="absolute bottom-32 md:left-8">
+          {audio && (
+            <div className="flex flex-col sml:flex-row lg:!flex-col xl:!flex-row gap-x-2 w-[225px] md:w-auto">
+              <audio controls src={audio} className="rounded-md"></audio>
+              <div className="flex gap-x-2 mt-2 sml:mt-0 lg:!mt-2 xl:!mt-0 h-10 sml:h-auto lg:!h-10 xl:!h-auto">
+                <button className="my_btn">
+                  <RiSendPlaneFill className="text-2xl mx-auto" />
+                </button>
+                <button
+                  onClick={() => setAudio("")}
+                  className="my_btn !bg-red-500 !border-red-500"
+                >
+                  <RiDeleteBin5Line className="text-2xl mx-auto" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="w-[88%] sml:w-[90%] relative">
           <input
+            onClick={() => setEmojiShow(false)}
             onChange={handleMessage}
             value={message}
             type="text"
             placeholder="Write Your Message"
-            className="py-3 sml:py-3.5 pl-2.5 sml:pl-6 pr-[58px] sml:pr-20 bg-lightwhite text-black font-pop font-medium rounded-lg w-full border-2 border-solid border-transparent focus:border-primary outline-none"
+            className="py-3 sml:py-3.5 pl-8 sml:pl-11 pr-[60px] sml:pr-[72px] bg-lightwhite text-black font-pop font-medium rounded-lg w-full border-2 border-solid border-transparent focus:border-primary outline-none"
           />
           <HiOutlinePhotograph
             onClick={() => setSendImageShow(true)}
-            className="absolute top-3.5 right-2 sml:right-3 text-2xl sml:text-3xl cursor-pointer text-primary"
+            className="absolute top-3.5 left-2 sml:left-3 text-2xl sml:text-3xl cursor-pointer text-primary"
           />
           <FaRegSmile
             onClick={() => setEmojiShow(!emojishow)}
-            className="absolute top-[17px] right-9 sml:right-12 text-xl sml:text-2xl cursor-pointer text-primary"
+            className="absolute top-[17px] right-9 sml:right-11 text-xl sml:text-2xl cursor-pointer text-primary"
           />
+          <BsFillMicFill className="absolute top-[17px] right-2.5 text-xl sml:text-2xl cursor-pointer text-primary" />
+          <div className="absolute top-[3.5px] sml:top-[5.5px] right-0.5 sml:right-0.5">
+            <AudioRecorder
+              onRecordingComplete={(blob) => addAudioElement(blob)}
+              recorderControls={recorderControls}
+            />
+          </div>
         </div>
-
-        <button
-          onClick={handleMessageSend}
-          className="my_btn !p-0 w-[12%] sml:w-[10%]"
-        >
-          <RiSendPlaneFill className="text-3xl sml:text-4xl lg:!text-3xl xl:!text-4xl mx-auto" />
-        </button>
+        <div className="flex w-[12%] sml:w-[10%]">
+          <button onClick={handleMessageSend} className="my_btn">
+            <RiSendPlaneFill className="text-3xl sml:text-4xl lg:!text-3xl xl:!text-4xl mx-auto" />
+          </button>
+        </div>
       </div>
       {emojishow && (
         <>
-          <div className="absolute bottom-24 left-8">
-            <EmojiPicker onEmojiClick={(e) => setMessage(message + e.emoji)} />
+          <div className="absolute bottom-24 left-4 md:left-8 z-10">
+            <EmojiPicker onEmojiClick={handleEmoji} />
+            {/* <EmojiPicker onEmojiClick={(e) => setMessage(message + e.emoji)} /> */}
           </div>
           <ImCross
             onClick={() => setEmojiShow(false)}
-            className="absolute bottom-[122px] left-[350px] text-primary cursor-pointer z-10"
+            className="absolute bottom-[122px] left-[265px] md:left-[350px] lg:left-[280px] xl:left-[350px] text-primary cursor-pointer z-10"
           />
         </>
       )}

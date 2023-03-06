@@ -1,7 +1,9 @@
+/* ======simplebar====== */
 .simplebar-scrollbar::before {
     background-color: rgba(17, 23, 93, 0.5) !important;
 }
 
+/* ======my_btn====== */
 .my_btn {
     position: relative;
     border: 2px solid #5F35F5;
@@ -52,6 +54,7 @@
     right: unset;
 }
 
+/* ======Toastify====== */
 .Toastify__toast-body {
     color: #ffffff;
     font-family: 'Nunito', sans-serif;
@@ -77,4 +80,43 @@
 
 .Toastify__close-button {
     display: none;
+}
+
+/* ======audio recorder====== */
+.audio-recorder {
+    box-shadow: none !important;
+    background: transparent !important;
+    /* width: 50px !important; */
+}
+
+.audio-recorder-mic {
+    height: 20px !important;
+    opacity: 0;
+
+}
+
+.recording .audio-recorder-mic {
+    opacity: 1 !important;
+}
+
+.recording {
+    border: 1px solid #bbb9b9;
+    background: #ebebeb !important;
+    margin-right: 8px;
+    width: 225px !important;
+}
+
+/* ======emoji====== */
+@media (max-width:767px) {
+    .EmojiPickerReact {
+        width: 280px !important;
+        height: 350px !important;
+    }
+}
+
+@media (min-width:1024px) and (max-width:1279px) {
+    .EmojiPickerReact {
+        width: 280px !important;
+        height: 350px !important;
+    }
 }

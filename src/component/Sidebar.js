@@ -130,7 +130,7 @@ const Sidebar = ({ active }) => {
         theme="colored"
         className={`!px-3 !mt-3`}
       />
-      <div className="bg-primary w-full lg:px-4 p-2 lg:py-9 lg:rounded-3xl overflow-y-hidden lg:overflow-x-hidden fixed bottom-0 left-0 z-10 lg:static flex justify-center lg:flex-col gap-x-5 sml:gap-x-16 md:!gap-x-28">
+      <div className="bg-primary w-full lg:px-4 p-2 lg:py-9 lg:rounded-3xl overflow-y-hidden lg:overflow-x-hidden fixed bottom-0 left-0 z-30 lg:static flex justify-center lg:flex-col gap-x-5 sml:gap-x-16 md:!gap-x-28">
         <div className="relative group">
           <picture>
             <img
