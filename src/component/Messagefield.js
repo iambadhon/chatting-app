@@ -8,7 +8,14 @@ import { HiOutlinePhotograph } from "react-icons/hi";
 import { FaRegSmile } from "react-icons/fa";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { useSelector } from "react-redux";
-import { getDatabase, ref, set, push, onValue } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+  onValue,
+  remove,
+} from "firebase/database";
 import { getAuth } from "firebase/auth";
 import moment from "moment/moment";
 import EmojiPicker from "emoji-picker-react";
@@ -17,6 +24,7 @@ import {
   ref as sref,
   uploadBytesResumable,
   getDownloadURL,
+  uploadBytes,
 } from "firebase/storage";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 
@@ -49,6 +57,8 @@ const Messagefield = () => {
   let [emojishow, setEmojiShow] = useState(false);
   //audio
   let [audio, setAudio] = useState("");
+  //audio data
+  let [audiodata, setAudioData] = useState("");
 
   //handle Message
   let handleMessage = (e) => {
@@ -130,7 +140,7 @@ const Messagefield = () => {
           (item.val().whoReceiveId == auth.currentUser.uid &&
             item.val().whoSendId == activeChatData.id)
         ) {
-          arr.push(item.val());
+          arr.push({ ...item.val(), sMsgDelKey: item.key });
         }
       });
       setSingleMessageList(arr);
@@ -143,7 +153,7 @@ const Messagefield = () => {
     onValue(groupMessageRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        arr.push(item.val());
+        arr.push({ ...item.val(), gMsgDelKey: item.key });
       });
       setGroupMessageList(arr);
     });
@@ -229,7 +239,51 @@ const Messagefield = () => {
   const recorderControls = useAudioRecorder();
   const addAudioElement = (blob) => {
     const url = URL.createObjectURL(blob);
+    setAudioData(blob);
     setAudio(url);
+  };
+
+  // hadle Audio Send
+  let hadleAudioSend = () => {
+    const audioSendRef = sref(storage, "chatAudio/" + Math.random());
+    uploadBytes(audioSendRef, audiodata).then((snapshot) => {
+      getDownloadURL(audioSendRef).then((downloadURL) => {
+        console.log("File available at", downloadURL);
+        if (activeChatData.status == "group") {
+          set(push(ref(db, "groupMessage")), {
+            whoSendId: auth.currentUser.uid,
+            whoSendName: auth.currentUser.displayName,
+            whoReceiveName: activeChatData.name,
+            whoReceiveId: activeChatData.groupId,
+            audio: downloadURL,
+            date: `${new Date().getFullYear()}/${
+              new Date().getMonth() + 1
+            }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+          }).then(() => {
+            setAudio("");
+          });
+        } else {
+          set(push(ref(db, "singleMessage")), {
+            whoSendId: auth.currentUser.uid,
+            whoSendName: auth.currentUser.displayName,
+            whoReceiveName: activeChatData.name,
+            whoReceiveId: activeChatData.id,
+            audio: downloadURL,
+            date: `${new Date().getFullYear()}/${
+              new Date().getMonth() + 1
+            }/${new Date().getDate()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+          }).then(() => {
+            setAudio("");
+          });
+        }
+      });
+    });
+  };
+
+  // handle Message Delete
+  let handleMessageDelete = (id) => {
+    remove(ref(db, "groupMessage/" + id));
+    remove(ref(db, "singleMessage/" + id));
   };
 
   return activeChatData !== null ? (
@@ -264,9 +318,42 @@ const Messagefield = () => {
                   ? item.whoReceiveId == activeChatData.groupId && (
                       <div className="mt-5 flex justify-end">
                         <div>
-                          <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
-                            {item.message}
+                          <div className="relative">
+                            <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                              {item.message}
+                            </p>
+                            <RiDeleteBin5Line
+                              onClick={() =>
+                                handleMessageDelete(item.gMsgDelKey)
+                              }
+                              className="absolute top-1/2 -translate-y-1/2 left-14 text-primary text-xl cursor-pointer"
+                            />
+                          </div>
+                          <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
+                            {moment(item.date).calendar()}
                           </p>
+                        </div>
+                      </div>
+                    )
+                  : item.audio
+                  ? item.whoReceiveId == activeChatData.groupId && (
+                      <div className="mt-5 flex justify-end">
+                        <div>
+                          <div className="relative">
+                            <p className="relative mr-3 p-1.5 bg-primary rounded-lg inline-block after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-[18px] after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                              <audio
+                                controls
+                                src={item.audio}
+                                className="rounded-lg w-[225px] sml:w-[300px]"
+                              ></audio>
+                            </p>
+                            <RiDeleteBin5Line
+                              onClick={() =>
+                                handleMessageDelete(item.gMsgDelKey)
+                              }
+                              className="absolute top-1/2 -translate-y-1/2 -left-6 text-primary text-xl cursor-pointer"
+                            />
+                          </div>
                           <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
                             {moment(item.date).calendar()}
                           </p>
@@ -276,9 +363,17 @@ const Messagefield = () => {
                   : item.whoReceiveId == activeChatData.groupId && (
                       <div className="mt-5 flex justify-end">
                         <div>
-                          <picture className="relative p-2 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary rounded-lg inline-block after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
-                            <img src={item.image} alt="chat" />
-                          </picture>
+                          <div className="relative">
+                            <picture className="relative p-2 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary rounded-lg inline-block after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                              <img src={item.image} alt="chat" />
+                            </picture>
+                            <RiDeleteBin5Line
+                              onClick={() =>
+                                handleMessageDelete(item.gMsgDelKey)
+                              }
+                              className="absolute top-1/2 -translate-y-1/2 left-14 text-primary text-xl cursor-pointer"
+                            />
+                          </div>
                           <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
                             {moment(item.date).calendar()}
                           </p>
@@ -293,6 +388,24 @@ const Messagefield = () => {
                       </p>
                       <p className="relative py-3 px-6 mr-10 md:mr-16 lg:mr-20 ml-3 bg-lightwhite text-black rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-5 after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
                         {item.message}
+                      </p>
+                      <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
+                        {moment(item.date).calendar()}
+                      </p>
+                    </div>
+                  )
+                : item.audio
+                ? item.whoReceiveId == activeChatData.groupId && (
+                    <div className="mt-5">
+                      <p className="font-pop font-medium text-gray text-sm pl-4 mb-1">
+                        {item.whoSendName}
+                      </p>
+                      <p className="relative p-1.5 ml-3 bg-lightwhite rounded-lg inline-block after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-[18px] after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
+                        <audio
+                          controls
+                          src={item.audio}
+                          className="rounded-lg w-[225px] sml:w-[300px]"
+                        ></audio>
                       </p>
                       <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
                         {moment(item.date).calendar()}
@@ -318,9 +431,15 @@ const Messagefield = () => {
                 item.message ? (
                   <div className="mt-5 flex justify-end">
                     <div>
-                      <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
-                        {item.message}
-                      </p>
+                      <div className="relative">
+                        <p className="relative py-3 px-6 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary text-white rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                          {item.message}
+                        </p>
+                        <RiDeleteBin5Line
+                          onClick={() => handleMessageDelete(item.sMsgDelKey)}
+                          className="absolute top-1/2 -translate-y-1/2 left-14 text-primary text-xl cursor-pointer"
+                        />
+                      </div>
                       <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
                         {moment(item.date).calendar()}
                       </p>
@@ -329,10 +448,37 @@ const Messagefield = () => {
                 ) : item.emoji ? (
                   <div className="mt-5 flex justify-end">
                     <div>
-                      <p className=" ml-10 md:ml-16 lg:ml-20 mr-3 text-3xl md:text-4xl inline-block !leading-snug">
-                        {item.emoji}
-                      </p>
+                      <div className="relative">
+                        <p className=" ml-10 md:ml-16 lg:ml-20 mr-3 text-3xl md:text-4xl inline-block !leading-snug">
+                          {item.emoji}
+                        </p>
+                        <RiDeleteBin5Line
+                          onClick={() => handleMessageDelete(item.sMsgDelKey)}
+                          className="absolute top-1/2 -translate-y-1/3 left-14 text-primary text-xl cursor-pointer"
+                        />
+                      </div>
                       <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1.5">
+                        {moment(item.date).calendar()}
+                      </p>
+                    </div>
+                  </div>
+                ) : item.audio ? (
+                  <div className="mt-5 flex justify-end">
+                    <div>
+                      <div className="relative">
+                        <p className="relative mr-3 p-1.5 bg-primary rounded-lg inline-block after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-[18px] after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                          <audio
+                            controls
+                            src={item.audio}
+                            className="rounded-lg w-[225px] sml:w-[300px]"
+                          ></audio>
+                        </p>
+                        <RiDeleteBin5Line
+                          onClick={() => handleMessageDelete(item.sMsgDelKey)}
+                          className="absolute top-1/2 -translate-y-1/2 -left-6 text-primary text-xl cursor-pointer"
+                        />
+                      </div>
+                      <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
                         {moment(item.date).calendar()}
                       </p>
                     </div>
@@ -340,9 +486,15 @@ const Messagefield = () => {
                 ) : (
                   <div className="mt-5 flex justify-end">
                     <div>
-                      <picture className="relative p-2 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary rounded-lg inline-block after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
-                        <img src={item.image} alt="chat" />
-                      </picture>
+                      <div className="relative">
+                        <picture className="relative p-2 ml-10 md:ml-16 lg:ml-20 mr-3 bg-primary rounded-lg inline-block after:absolute after:bottom-0 after:-right-3 after:content-[''] after:w-5 after:h-6 after:clip-path-rightpolygon after:bg-primary">
+                          <img src={item.image} alt="chat" />
+                        </picture>
+                        <RiDeleteBin5Line
+                          onClick={() => handleMessageDelete(item.sMsgDelKey)}
+                          className="absolute top-1/2 -translate-y-1/2 left-14 text-primary text-xl cursor-pointer"
+                        />
+                      </div>
                       <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
                         {moment(item.date).calendar()}
                       </p>
@@ -353,6 +505,19 @@ const Messagefield = () => {
                 <div className="mt-5">
                   <p className="relative py-3 px-6 mr-10 md:mr-16 lg:mr-20 ml-3 bg-lightwhite text-black rounded-lg inline-block font-pop font-medium after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-5 after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
                     {item.message}
+                  </p>
+                  <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
+                    {moment(item.date).calendar()}
+                  </p>
+                </div>
+              ) : item.audio ? (
+                <div className="mt-5">
+                  <p className="relative p-1.5 ml-3 bg-lightwhite rounded-lg inline-block after:absolute after:bottom-0 after:-left-3 after:content-[''] after:w-[18px] after:h-6 after:clip-path-leftpolygon after:bg-lightwhite">
+                    <audio
+                      controls
+                      src={item.audio}
+                      className="rounded-lg w-[225px] sml:w-[300px]"
+                    ></audio>
                   </p>
                   <p className="font-pop font-medium text-gray text-xs pl-2 mt-1">
                     {moment(item.date).calendar()}
@@ -377,7 +542,10 @@ const Messagefield = () => {
               <audio controls src={audio} className="rounded-md"></audio>
               <div className="flex gap-x-2 mt-2 sml:mt-0 lg:!mt-2 xl:!mt-0 h-10 sml:h-auto lg:!h-10 xl:!h-auto">
                 <button className="my_btn">
-                  <RiSendPlaneFill className="text-2xl mx-auto" />
+                  <RiSendPlaneFill
+                    onClick={hadleAudioSend}
+                    className="text-2xl mx-auto"
+                  />
                 </button>
                 <button
                   onClick={() => setAudio("")}
