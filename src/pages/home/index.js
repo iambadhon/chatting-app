@@ -6,34 +6,56 @@ import Grouplist from "../../component/Grouplist";
 import Mygroup from "../../component/Mygroup";
 import Sidebar from "../../component/Sidebar";
 import Userlist from "../../component/Userlist";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { userLoginInfo } from "../../slices/userSlice";
 
 const Home = () => {
   //Authentication
   const auth = getAuth();
   //email Verified
   let [emailvarify, setEmailVarify] = useState(false);
-
   //redirection
   let navigate = useNavigate();
+  //redux
+  let dispatch = useDispatch();
 
-  //email varify
+  // user Login Info
+  let userData = useSelector((state) => state.userLoginInfo.userInfo);
+
   useEffect(() => {
-    if (!auth.currentUser) {
+    if (!userData) {
       navigate("/login");
-    } else {
-      if (auth.currentUser.emailVerified) {
-        setEmailVarify(true);
-      }
     }
   }, []);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user.emailVerified) {
+      setEmailVarify(true);
+      dispatch(userLoginInfo(user));
+      localStorage.setItem("userInfo", JSON.stringify(user));
+    }
+  });
+
+  //email varify
+  // useEffect(() => {
+  //   if (!auth.currentUser) {
+  //     navigate("/login");
+  //   } else {
+  //     if (auth.currentUser.emailVerified) {
+  //       setEmailVarify(true);
+  //     }
+  //   }
+  // }, []);
 
   //handle sign out
   let handleSignOut = () => {
     signOut(auth).then(() => {
+      dispatch(userLoginInfo(null));
+      localStorage.removeItem("userInfo");
       navigate("/login");
     });
   };

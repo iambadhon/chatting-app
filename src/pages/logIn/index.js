@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { json, Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { RiEyeCloseFill, RiEyeFill } from "react-icons/ri";
 import { useState } from "react";
@@ -13,6 +13,8 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
+import { useDispatch } from "react-redux";
+import { userLoginInfo } from "../../slices/userSlice";
 
 const LogIn = () => {
   //data base
@@ -27,6 +29,8 @@ const LogIn = () => {
   //Authentication success
   // let [loginsuccess, setLoginSuccess] = useState("");
 
+  // redux
+  const dispatch = useDispatch();
   //react loading
   let [loading, setLoading] = useState(false);
   //redirection
@@ -101,6 +105,8 @@ const LogIn = () => {
           .then((user) => {
             toast("Login Successfull. Please wait a second");
             // setLoginSuccess("Login Successfull. Please wait a secend");
+            dispatch(userLoginInfo(user.user));
+            localStorage.setItem("userInfo", JSON.stringify(user));
             setTimeout(() => {
               navigate("/");
             }, 4000);
@@ -127,6 +133,8 @@ const LogIn = () => {
   //google login
   let handleGoogleLogin = () => {
     signInWithPopup(auth, provider).then((user) => {
+      dispatch(userLoginInfo(user.user));
+      localStorage.setItem("userInfo", JSON.stringify(user));
       set(ref(db, "users/" + user.user.uid), {
         name: user.user.displayName,
         email: user.user.email,

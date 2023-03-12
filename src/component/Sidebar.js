@@ -17,6 +17,8 @@ import {
   uploadString,
   getDownloadURL,
 } from "firebase/storage";
+import { useDispatch } from "react-redux";
+import { userLoginInfo } from "../slices/userSlice";
 
 const Sidebar = ({ active }) => {
   //Authentication
@@ -27,6 +29,8 @@ const Sidebar = ({ active }) => {
   let [uploadimageshow, setUploadImageShow] = useState(false);
   //redirection
   let navigate = useNavigate();
+  //redux
+  let dispatch = useDispatch();
   //img
   let [img, setImg] = useState("");
   //preview img
@@ -50,6 +54,8 @@ const Sidebar = ({ active }) => {
   //handle sign out
   let handleSignOut = () => {
     signOut(auth).then(() => {
+      dispatch(userLoginInfo(null));
+      localStorage.removeItem("userInfo");
       navigate("/login");
     });
   };

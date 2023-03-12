@@ -106,6 +106,11 @@
     width: 225px !important;
 }
 
+/* audio tag */
+/* audio::-webkit-media-controls-panel {
+    background-color: #04f004;
+} */
+
 /* ======emoji====== */
 @media (max-width:767px) {
     .EmojiPickerReact {
