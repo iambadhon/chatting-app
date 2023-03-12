@@ -124,10 +124,7 @@ const Joinedgrouplist = () => {
       )}
       <SimpleBar className="h-[385px] px-4 pt-5">
         {mygrouplist.map((item) => (
-          <div
-            onClick={() => handleActiveChat(item)}
-            className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0 cursor-pointer"
-          >
+          <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
             <div className="flex items-center gap-2">
               <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
                 <picture>
@@ -152,7 +149,10 @@ const Joinedgrouplist = () => {
               </div>
             </div>
             <div>
-              <button className="my_btn !py-1 !px-2">
+              <button
+                onClick={() => handleActiveChat(item)}
+                className="my_btn !py-1 !px-2"
+              >
                 <BiMessageDetail className="text-3xl" />
               </button>
             </div>
@@ -160,10 +160,7 @@ const Joinedgrouplist = () => {
         ))}
         {searchuser.length > 0
           ? searchuser.map((item) => (
-              <div
-                onClick={() => handleActiveChat(item)}
-                className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0 cursor-pointer"
-              >
+              <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
                 <div className="flex items-center gap-2">
                   <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
                     <picture>
@@ -188,17 +185,17 @@ const Joinedgrouplist = () => {
                   </div>
                 </div>
                 <div>
-                  <button className="my_btn !py-1 !px-2">
+                  <button
+                    onClick={() => handleActiveChat(item)}
+                    className="my_btn !py-1 !px-2"
+                  >
                     <BiMessageDetail className="text-3xl" />
                   </button>
                 </div>
               </div>
             ))
           : joinedgrouplist.map((item) => (
-              <div
-                onClick={() => handleActiveChat(item)}
-                className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0 cursor-pointer"
-              >
+              <div className="flex items-center justify-between border-b border-solid border-gray pb-4 mb-4 last:pb-0 last:mb-0 last:border-b-0">
                 <div className="flex items-center gap-2">
                   <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
                     <picture>
@@ -223,7 +220,10 @@ const Joinedgrouplist = () => {
                   </div>
                 </div>
                 <div>
-                  <button className="my_btn !py-1 !px-2">
+                  <button
+                    onClick={() => handleActiveChat(item)}
+                    className="my_btn !py-1 !px-2"
+                  >
                     <BiMessageDetail className="text-3xl" />
                   </button>
                 </div>
