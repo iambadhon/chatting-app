@@ -8,8 +8,7 @@ import Sidebar from "../../component/Sidebar";
 import Userlist from "../../component/Userlist";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { userLoginInfo } from "../../slices/userSlice";
 
@@ -32,6 +31,7 @@ const Home = () => {
     }
   }, []);
 
+  //email varify
   onAuthStateChanged(auth, (user) => {
     if (user.emailVerified) {
       setEmailVarify(true);
