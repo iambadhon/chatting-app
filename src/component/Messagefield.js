@@ -326,7 +326,7 @@ const Messagefield = () => {
                               onClick={() =>
                                 handleMessageDelete(item.gMsgDelKey)
                               }
-                              className="absolute top-1/2 -translate-y-1/2 left-14 text-primary text-xl cursor-pointer"
+                              className="absolute top-1/2 -translate-y-1/2 left-4 md:left-10 lg:left-14 text-primary text-xl cursor-pointer"
                             />
                           </div>
                           <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
@@ -371,7 +371,7 @@ const Messagefield = () => {
                               onClick={() =>
                                 handleMessageDelete(item.gMsgDelKey)
                               }
-                              className="absolute top-1/2 -translate-y-1/2 left-14 text-primary text-xl cursor-pointer"
+                              className="absolute top-1/2 -translate-y-1/2 left-4 md:left-10 lg:left-14 text-primary text-xl cursor-pointer"
                             />
                           </div>
                           <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
@@ -437,7 +437,7 @@ const Messagefield = () => {
                         </p>
                         <RiDeleteBin5Line
                           onClick={() => handleMessageDelete(item.sMsgDelKey)}
-                          className="absolute top-1/2 -translate-y-1/2 left-14 text-primary text-xl cursor-pointer"
+                          className="absolute top-1/2 -translate-y-1/2 left-4 md:left-10 lg:left-14 text-primary text-xl cursor-pointer"
                         />
                       </div>
                       <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
@@ -454,7 +454,7 @@ const Messagefield = () => {
                         </p>
                         <RiDeleteBin5Line
                           onClick={() => handleMessageDelete(item.sMsgDelKey)}
-                          className="absolute top-1/2 -translate-y-1/3 left-14 text-primary text-xl cursor-pointer"
+                          className="absolute top-1/2 -translate-y-1/3 left-4 md:left-10 lg:left-14 text-primary text-xl cursor-pointer"
                         />
                       </div>
                       <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1.5">
@@ -492,7 +492,7 @@ const Messagefield = () => {
                         </picture>
                         <RiDeleteBin5Line
                           onClick={() => handleMessageDelete(item.sMsgDelKey)}
-                          className="absolute top-1/2 -translate-y-1/2 left-14 text-primary text-xl cursor-pointer"
+                          className="absolute top-1/2 -translate-y-1/2 left-4 md:left-10 lg:left-14 text-primary text-xl cursor-pointer"
                         />
                       </div>
                       <p className="flex justify-end font-pop font-medium text-gray text-xs pr-2 mt-1">
